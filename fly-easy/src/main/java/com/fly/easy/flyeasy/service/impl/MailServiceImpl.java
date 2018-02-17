@@ -14,9 +14,7 @@ import com.fly.easy.flyeasy.service.interfaces.MailService;
 import com.google.common.collect.Lists;
 
 import it.ozimov.springboot.mail.model.Email;
-import it.ozimov.springboot.mail.model.InlinePicture;
 import it.ozimov.springboot.mail.model.defaultimpl.DefaultEmail;
-import it.ozimov.springboot.mail.model.defaultimpl.DefaultInlinePicture;
 import it.ozimov.springboot.mail.service.EmailService;
 import it.ozimov.springboot.mail.service.exception.CannotSendEmailException;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +23,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MailServiceImpl implements MailService {
 
-	private static final String CONFIRMATION_EMAIL_TEMPATE = "confirmation_email_tempalte.ftl";
+	private static final String CONFIRMATION_EMAIL_TEMPATE = "confirmation_email_template.ftl";
+
+	private static final String RESET_PASSWORD_TEMPLATE = "reset_password_email_template.ftl";
 
 	@Autowired
 	public EmailService emailService;
@@ -56,6 +56,14 @@ public class MailServiceImpl implements MailService {
 
 		emailService.send(email, template, model);
 
+	}
+
+	@Override
+	public void sendEmailResetPassord(String userEmail, String url) throws CannotSendEmailException {
+		Map<String, Object> model = new HashMap<>();
+		model.put("url", url);
+
+		sendEmailTempate(userEmail, "Reset Password", model, RESET_PASSWORD_TEMPLATE);
 	}
 
 }

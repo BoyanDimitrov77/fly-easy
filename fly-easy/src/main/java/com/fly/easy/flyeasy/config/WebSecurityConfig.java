@@ -32,6 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
 
                 .antMatchers("/register/**").anonymous()
+                .antMatchers("users/resetPassword").permitAll()
                 
     
                     .and()

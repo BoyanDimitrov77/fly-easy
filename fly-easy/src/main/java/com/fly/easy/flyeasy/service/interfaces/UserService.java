@@ -20,6 +20,6 @@ public interface UserService {
 	User activateUser(User user);
 	
 	void resetPassword(User dbUser, String password);
-	
-	//boolean isMatchPassword(String inputPassword, String userPassword);
+
+	void resetPasswrodRequest(String userEmail) throws CannotSendEmailException;
 }

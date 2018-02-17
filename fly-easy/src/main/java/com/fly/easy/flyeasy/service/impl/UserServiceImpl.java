@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fly.easy.flyeasy.api.common.ApiException;
 import com.fly.easy.flyeasy.api.dto.UserDto;
 import com.fly.easy.flyeasy.db.model.User;
 import com.fly.easy.flyeasy.db.model.UserRole;
@@ -110,6 +111,31 @@ public class UserServiceImpl implements UserService{
     public void resetPassword(User dbUser, String password) {
 		dbUser.setPassword(passwordEncoder.encode(password));
 		userRepository.save(dbUser);
+	}
+
+	@Override
+	public void resetPasswrodRequest(String userEmail) throws CannotSendEmailException {
+
+		User user = userRepository.findByEmail(userEmail);
+		if (user == null) {
+			throw new ApiException("User not found with such and email");
+
+		}
+		generateToken(user);
+	}
+
+	private void generateToken(User user) throws CannotSendEmailException {
+
+		VerificationToken oldToken = verificationTokenService.findByUser(user);
+		if (oldToken != null) {
+			verificationTokenService.deleteToken(oldToken);
+		}
+
+		VerificationToken newToken = verificationTokenService.generateTokenForUser(user);
+		String url = verificationTokenService.urlFromToken(newToken);
+
+		mailService.sendEmailResetPassord(user.getEmail(), url);
+
 	}
 
 }
