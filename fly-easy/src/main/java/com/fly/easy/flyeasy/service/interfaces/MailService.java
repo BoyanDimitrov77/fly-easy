@@ -6,4 +6,6 @@ public interface MailService {
 
 	
 	void sendEmailConfirmation(String userEmail, String url) throws CannotSendEmailException;
+
+	void sendEmailResetPassord(String userEmail, String url) throws CannotSendEmailException;
 }
