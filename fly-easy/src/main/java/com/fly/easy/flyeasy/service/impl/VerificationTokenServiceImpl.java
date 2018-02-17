@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fly.easy.flyeasy.api.common.ApiException;
 import com.fly.easy.flyeasy.api.dto.UserDto;
 import com.fly.easy.flyeasy.db.model.User;
 import com.fly.easy.flyeasy.db.model.VerificationToken;
@@ -39,7 +40,7 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     @Value("${server.contextPath}")
     private String restUrl;
 
-    private final static String mailUrl = "https://tripsyclub.app.link?action=";
+    //private final static String mailUrl = "https://tripsyclub.app.link?action=";
 
     @Override
     public VerificationToken generateTokenForUser(User user) {
@@ -54,11 +55,11 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     public UserDto verifyToken(String token) {
         VerificationToken dbToken = findByToken(token);
         if (dbToken == null) {
-           // throw new ApiException("Invalid token");
+            throw new ApiException("Invalid token");
         }
 
         if (dbToken.getExpiryDate().before(new Date())) {
-            //throw new ApiException("The token has expired");
+            throw new ApiException("The token has expired");
         }
 
         User result = userService.activateUser(dbToken.getUser());
@@ -87,7 +88,7 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     }
 
 
-    @Override
+    /*@Override
     public String urlFromToken(String token, String type){
 
         StringBuilder builder = new StringBuilder();
@@ -96,7 +97,7 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
         builder.append("&token=");
         builder.append(token);
         return builder.toString();
-    }
+    }*/
 
 
     @Override

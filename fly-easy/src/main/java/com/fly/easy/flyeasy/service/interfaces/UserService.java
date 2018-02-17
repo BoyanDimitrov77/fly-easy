@@ -6,12 +6,14 @@ import com.fly.easy.flyeasy.api.dto.UserDto;
 import com.fly.easy.flyeasy.db.model.User;
 import com.fly.easy.flyeasy.db.model.UserRoleEnum;
 
+import it.ozimov.springboot.mail.service.exception.CannotSendEmailException;
+
 
 public interface UserService {
 
 	UserDto findByEmail(String email);
 
-	UserDto register(UserDto userDto) throws ParseException;
+	UserDto register(UserDto userDto) throws ParseException, CannotSendEmailException;
 	
 	User addRole(User user, UserRoleEnum role);
 	

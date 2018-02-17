@@ -20,6 +20,6 @@ public interface VerificationTokenService {
 
     void deleteToken(VerificationToken dbToken);
 
-    String urlFromToken(String token, String type);
+    //String urlFromToken(String token, String type);
 
 }

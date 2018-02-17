@@ -15,6 +15,8 @@ import org.springframework.web.context.request.WebRequest;
 import com.fly.easy.flyeasy.api.dto.UserDto;
 import com.fly.easy.flyeasy.service.interfaces.UserService;
 
+import it.ozimov.springboot.mail.service.exception.CannotSendEmailException;
+
 @Transactional
 @RestController
 @RequestMapping(value = "register", produces="application/json", consumes="application/json")
@@ -24,7 +26,7 @@ public class RegisterUserController {
 	private UserService userService;
 	
 	@RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<UserDto> create(@RequestBody UserDto user, WebRequest request) throws ParseException {
+    public ResponseEntity<UserDto> create(@RequestBody UserDto user, WebRequest request) throws ParseException ,CannotSendEmailException {
         UserDto result = userService.register(user);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

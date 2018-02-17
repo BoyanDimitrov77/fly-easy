@@ -16,8 +16,11 @@ import com.fly.easy.flyeasy.db.model.UserRolePk;
 import com.fly.easy.flyeasy.db.model.VerificationToken;
 import com.fly.easy.flyeasy.db.repository.UserRepository;
 import com.fly.easy.flyeasy.db.repository.UserRoleRepository;
+import com.fly.easy.flyeasy.service.interfaces.MailService;
 import com.fly.easy.flyeasy.service.interfaces.UserService;
 import com.fly.easy.flyeasy.service.interfaces.VerificationTokenService;
+
+import it.ozimov.springboot.mail.service.exception.CannotSendEmailException;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -37,6 +40,9 @@ public class UserServiceImpl implements UserService{
 	@Autowired
 	private VerificationTokenService verificationTokenService;
 	
+	@Autowired
+	private MailService mailService;
+
 	public PasswordEncoder getPasswordEncoder(){
 		return this.passwordEncoder;
 	}
@@ -49,7 +55,7 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	@Transactional
-    public UserDto register(UserDto userDto) throws ParseException {
+    public UserDto register(UserDto userDto) throws ParseException,CannotSendEmailException {
 
         /*if (!userDtoValidator.isValid(userDto)) {
             throw new ApiException("User with email already exists");
@@ -63,7 +69,7 @@ public class UserServiceImpl implements UserService{
 		return processRegularRegistration(userDto);
 	}
 	
-	private UserDto processRegularRegistration(UserDto userDto) {
+	private UserDto processRegularRegistration(UserDto userDto) throws CannotSendEmailException {
 		User savedUser;
 		
 		User userModel = mapper.map(userDto, User.class);
@@ -75,9 +81,9 @@ public class UserServiceImpl implements UserService{
 		savedUser = addRole(savedUser, UserRoleEnum.ROLE_USER);
 		
 		VerificationToken token = verificationTokenService.generateTokenForUser(savedUser);
-		String url = verificationTokenService.urlFromToken(token.getToken(), "confirm");
+		String url = verificationTokenService.urlFromToken(token);
 
-		//mailService.sendAccountConfirmationMail(savedUser.getEmail(), url);
+		mailService.sendEmailConfirmation(savedUser.getEmail(), url);
 
 		return UserDto.of(savedUser);
 	}
@@ -106,9 +112,4 @@ public class UserServiceImpl implements UserService{
 		userRepository.save(dbUser);
 	}
 
-/*	@Override
-	public boolean isMatchPassword(String inputPassword, String userPassword) {
-		
-		return passwordEncoder.matches(inputPassword, userPassword);
-	}*/
 }
