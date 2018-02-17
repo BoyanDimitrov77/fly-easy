@@ -2,10 +2,12 @@ package com.fly.easy.flyeasy;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
+
+import it.ozimov.springboot.mail.configuration.EnableEmailTools;
 
 @SpringBootApplication
-//@ComponentScan(basePackages = {"com.flight.easy.flighteasy"})
+@EnableEmailTools
+//@ComponentScan(basePackages = {"com.fly.easy.flyeasy","it.ozimov.springboot"})
 public class FlyEasyApplication {
 
 	public static void main(String[] args) {
