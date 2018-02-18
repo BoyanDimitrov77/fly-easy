@@ -57,6 +57,10 @@ public class UserDto implements Principal {
     @JsonFormat(pattern = "dd-MM-yyyy", timezone = "UTC")
     private Date timestamp;
 
+    @Getter
+    @Setter
+    private PictureDto profilePicture;
+
     @Tolerate
 	public UserDto() {
 	}
@@ -74,6 +78,7 @@ public class UserDto implements Principal {
                 .fullName(u.getFullName())
                 .enabled(u.isEnabled())
                 .timestamp(u.getTimestamp())
+                .profilePicture(PictureDto.of(u.getProfilePicture()))
                 .build();
     }
 }
