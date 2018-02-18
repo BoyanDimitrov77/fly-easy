@@ -1,6 +1,9 @@
 package com.fly.easy.flyeasy.service.interfaces;
 
+import java.io.IOException;
 import java.text.ParseException;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fly.easy.flyeasy.api.dto.UserDto;
 import com.fly.easy.flyeasy.db.model.User;
@@ -22,4 +25,6 @@ public interface UserService {
 	void resetPassword(User dbUser, String password);
 
 	void resetPasswrodRequest(String userEmail) throws CannotSendEmailException;
+
+	UserDto uploadProfilePhoto(MultipartFile file, UserDto userDto )throws IOException;
 }

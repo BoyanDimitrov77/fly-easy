@@ -1,5 +1,7 @@
 package com.fly.easy.flyeasy.api.endpoint;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,11 +9,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fly.easy.flyeasy.api.common.ApiException;
+import com.fly.easy.flyeasy.api.dto.PictureDto;
 import com.fly.easy.flyeasy.api.dto.UserDto;
 import com.fly.easy.flyeasy.service.interfaces.UserService;
+import com.fly.easy.flyeasy.util.UserUtil;
 
 import it.ozimov.springboot.mail.service.exception.CannotSendEmailException;
 
@@ -29,7 +35,7 @@ public class UserController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/resetPassword")
-	public ResponseEntity<String> resetPassword(@RequestBody UserDto user) {
+	public ResponseEntity<String> RequestMethod(@RequestBody UserDto user) {
 
 		try {
 			userService.resetPasswrodRequest(user.getEmail());
@@ -39,6 +45,21 @@ public class UserController {
 		}
 		return new ResponseEntity<>(HttpStatus.OK);
 
+	}
+
+	@RequestMapping(method = RequestMethod.POST, value = "/uploadProfilePhoto")
+	public ResponseEntity<PictureDto> uploadProfilePhoto(@RequestParam("file") MultipartFile file,
+			SecurityContextHolder context) {
+
+		PictureDto profilePicture = null;
+		try {
+			profilePicture = userService.uploadProfilePhoto(file, UserUtil.gerUserFromContext()).getProfilePicture();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return new ResponseEntity<>(profilePicture, HttpStatus.OK);
 	}
 
 }
