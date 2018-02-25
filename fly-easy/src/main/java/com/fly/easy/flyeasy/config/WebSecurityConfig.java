@@ -33,7 +33,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers("/register/**").anonymous()
                 .antMatchers("users/resetPassword").permitAll()
-                
+                .antMatchers("airline/createAirlineRecord").hasRole("ADMIN")
+                .antMatchers("airline/uploadAirlineLogo/**").hasRole("ADMIN")
+                .antMatchers("flight/createFlightRecord/**").hasRole("ADMIN")
+                .antMatchers("flight/all").hasAnyRole("ADMIN","USER")
     
                     .and()
                 .addFilterBefore(new CorsFilter(), ChannelProcessingFilter.class)

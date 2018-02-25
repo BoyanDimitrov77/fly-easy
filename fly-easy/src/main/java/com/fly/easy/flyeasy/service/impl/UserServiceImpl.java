@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService{
 		userModel.setUserName(userDto.getUserName());
 
 		savedUser = userRepository.save(userModel);
-		savedUser = addRole(savedUser, UserRoleEnum.ROLE_USER);
+		savedUser = addRole(savedUser, UserRoleEnum.USER);
 		
 		VerificationToken token = verificationTokenService.generateTokenForUser(savedUser);
 		String url = verificationTokenService.urlFromToken(token);

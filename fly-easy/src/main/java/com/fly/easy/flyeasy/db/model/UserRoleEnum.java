@@ -2,7 +2,7 @@ package com.fly.easy.flyeasy.db.model;
 
 public enum UserRoleEnum {
 
-    ROLE_ADMIN("ROLE_ADMIN"), ROLE_USER("ROLE_USER");
+    ADMIN("ADMIN"), USER("USER");
 
 
     private final String roleName;
