@@ -1,6 +1,7 @@
 package com.fly.easy.flyeasy.api.dto;
 
 import com.fly.easy.flyeasy.db.model.Picture;
+import com.fly.easy.flyeasy.util.FlyEasyApp;
 
 import lombok.Builder;
 import lombok.Data;
@@ -18,9 +19,10 @@ public class PictureDto {
 	private ResourceDto fullScreenPicture;
 
 	public static final PictureDto of(Picture picture) {
-		return PictureDto.builder().id(picture.getId()).orignalPicture(ResourceDto.of(picture.getOriginalImage()))
-				.thumbnailPicture(ResourceDto.of(picture.getThumbnailPicture()))
-				.fullScreenPicture(ResourceDto.of(picture.getFullScreenPicutre())).build();
+		return FlyEasyApp.ofNullable(picture,
+				pic -> PictureDto.builder().id(pic.getId()).orignalPicture(ResourceDto.of(pic.getOriginalImage()))
+						.thumbnailPicture(ResourceDto.of(pic.getThumbnailPicture()))
+						.fullScreenPicture(ResourceDto.of(pic.getFullScreenPicutre())).build());
 
 	}
 }
