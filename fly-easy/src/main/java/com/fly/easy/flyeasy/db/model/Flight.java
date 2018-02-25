@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import lombok.Data;
 
@@ -40,10 +42,12 @@ public class Flight {
 	@JoinColumn(name = "location_to_id")
 	private Location locationTo;
 
-	@Column(name = "depart_date")
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "depart_date",nullable = false)
 	private Date departDate;
 
-	@Column(name = "arrive_date")
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "arrive_date",nullable = false)
 	private Date arriveDate;
 
 	@Column(name = "price")
@@ -55,6 +59,7 @@ public class Flight {
 	@Column(name = "class")
 	private String travelClass;
 
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "timestamp")
 	private Date timestamp;
 

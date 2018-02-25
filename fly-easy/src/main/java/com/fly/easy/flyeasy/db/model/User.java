@@ -11,6 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -47,6 +49,7 @@ public class User implements Serializable{
 	@Column(name = "enabled", nullable = false)
 	private boolean enabled;
 	
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "timestamp")
 	private Date timestamp;
 	
