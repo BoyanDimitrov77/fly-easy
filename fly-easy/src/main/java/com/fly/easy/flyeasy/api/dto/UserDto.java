@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fly.easy.flyeasy.db.model.User;
+import com.fly.easy.flyeasy.util.FlyEasyApp;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -70,15 +71,16 @@ public class UserDto implements Principal {
         return fullName;
     }
 
-    public static UserDto of(User u) {
-        return  UserDto.builder()
-                .id(u.getId())
+    public static UserDto of(User user) {
+
+	return FlyEasyApp.ofNullable(user, u->UserDto.builder()
+				.id(u.getId())
                 .email(u.getEmail())
                 .userName(u.getUserName())
                 .fullName(u.getFullName())
                 .enabled(u.isEnabled())
                 .timestamp(u.getTimestamp())
                 .profilePicture(PictureDto.of(u.getProfilePicture()))
-                .build();
+                .build());
     }
 }
