@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fly.easy.flyeasy.api.dto.FilterDateDto;
+import com.fly.easy.flyeasy.api.dto.FilterLocationDto;
 import com.fly.easy.flyeasy.api.dto.FlightDto;
 import com.fly.easy.flyeasy.service.interfaces.FlightService;
 
@@ -23,7 +25,7 @@ public class FlightController {
 	@Autowired
 	private FlightService flightService;
 
-	@RequestMapping(method = RequestMethod.POST, value = "/createFlightRecord/{airlineId}")
+	@RequestMapping(method = RequestMethod.POST, value = "/create/createFlightRecord/{airlineId}")
 	@Transactional
 	public ResponseEntity<FlightDto> createFlightRecord(@RequestBody FlightDto flightDto,
 			@PathVariable("airlineId") long airlineId) {
@@ -33,13 +35,13 @@ public class FlightController {
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET, value = "/all")
 	public List<FlightDto> getAllFlights() {
 
 		return flightService.findAllFlight();
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET, value = "/{flightId}")
 	public ResponseEntity<FlightDto> getFlight(@PathVariable("flightId") long flightId) {
 
@@ -47,4 +49,30 @@ public class FlightController {
 
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
+
+	@RequestMapping(method = RequestMethod.POST, value = "/allByDates")
+	public List<FlightDto> getAllFlightByDates(@RequestBody FilterDateDto dto) {
+
+		return flightService.findFlightBetweenDates(dto.getFromDate(), dto.getToDate());
+
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/allByPrice")
+	public List<FlightDto> getFlightByPrice() {
+
+		return flightService.getFlightsByPrice();
+	}
+
+	@RequestMapping(method = RequestMethod.POST, value = "/allByLocation")
+	public List<FlightDto> getFlightsByLocation(@RequestBody FilterLocationDto dto) {
+
+		return flightService.getFlightsByLocation(dto.getLocationFrom(), dto.getLocationTo());
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/allByRaiting")
+	public List<FlightDto> getFlightsByAirlineRaiting() {
+
+		return flightService.getFlightsByAirlineRaiting();
+	}
+
 }

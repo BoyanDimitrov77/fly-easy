@@ -1,9 +1,8 @@
 package com.fly.easy.flyeasy.service.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import javax.jdo.annotations.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,6 +65,34 @@ public class FlightServiceImpl implements FlightService {
 			throw new ApiException("Flight not found");
 		}
 		return FlightDto.of(flight);
+	}
+
+	@Override
+	public List<FlightDto> findFlightBetweenDates(Date fromDate, Date toDate) {
+
+		return flightRepository.findAllFlightBetweenDates(fromDate, toDate).stream().map(flight -> FlightDto.of(flight))
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<FlightDto> getFlightsByPrice() {
+
+		return flightRepository.findFlightsByPrice().stream().map(flight -> FlightDto.of(flight))
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<FlightDto> getFlightsByLocation(String locationFrom, String locationTo) {
+
+		return flightRepository.findFlightsByLocation(locationFrom, locationTo).stream()
+				.map(flight -> FlightDto.of(flight)).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<FlightDto> getFlightsByAirlineRaiting() {
+
+		return flightRepository.findFlightsByRatingAirline().stream().map(flight -> FlightDto.of(flight))
+				.collect(Collectors.toList());
 	}
 
 }
