@@ -29,6 +29,9 @@ public class PassengerTicket {
 	@Column(name = "personal_identification_number")
 	private String personalIdentificationNumber;
 
+	@Column(name = "email")
+	private String email;
+
 	@Column(name = "ticket_number")
 	private String ticketNumber;
 

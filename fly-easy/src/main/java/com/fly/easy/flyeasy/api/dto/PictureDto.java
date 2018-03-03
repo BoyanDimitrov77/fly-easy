@@ -18,6 +18,19 @@ public class PictureDto {
 
 	private ResourceDto fullScreenPicture;
 
+	public PictureDto() {
+		super();
+	}
+
+	public PictureDto(String id, ResourceDto orignalPicture, ResourceDto thumbnailPicture,
+			ResourceDto fullScreenPicture) {
+		super();
+		this.id = id;
+		this.orignalPicture = orignalPicture;
+		this.thumbnailPicture = thumbnailPicture;
+		this.fullScreenPicture = fullScreenPicture;
+	}
+
 	public static final PictureDto of(Picture picture) {
 		return FlyEasyApp.ofNullable(picture,
 				pic -> PictureDto.builder().id(pic.getId()).orignalPicture(ResourceDto.of(pic.getOriginalImage()))
@@ -25,4 +38,5 @@ public class PictureDto {
 						.fullScreenPicture(ResourceDto.of(pic.getFullScreenPicutre())).build());
 
 	}
+
 }

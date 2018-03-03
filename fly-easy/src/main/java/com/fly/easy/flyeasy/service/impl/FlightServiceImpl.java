@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 
 import com.fly.easy.flyeasy.api.common.ApiException;
 import com.fly.easy.flyeasy.api.dto.FlightDto;
+import com.fly.easy.flyeasy.api.dto.TravelClassDto;
 import com.fly.easy.flyeasy.db.model.Airline;
 import com.fly.easy.flyeasy.db.model.Flight;
+import com.fly.easy.flyeasy.db.model.TravelClass;
 import com.fly.easy.flyeasy.db.repository.AirlineRepository;
 import com.fly.easy.flyeasy.db.repository.FlightRepository;
 import com.fly.easy.flyeasy.service.interfaces.FlightService;
@@ -44,8 +46,7 @@ public class FlightServiceImpl implements FlightService {
 		flight.setDepartDate(flightDto.getDepartDate());
 		flight.setArriveDate(flightDto.getArriveDate());
 		flight.setPrice(flightDto.getPrice());
-		flight.setSeats(flightDto.getSeats());
-		flight.setTravelClass(flightDto.getTravelClass());
+		flight.setTravelClasses(createFlightTravelClasses(flightDto.getTravelClasses()));
 
 		Flight saveFlight = flightRepository.saveAndFlush(flight);
 
@@ -93,6 +94,16 @@ public class FlightServiceImpl implements FlightService {
 
 		return flightRepository.findFlightsByRatingAirline().stream().map(flight -> FlightDto.of(flight))
 				.collect(Collectors.toList());
+	}
+
+	private List<TravelClass> createFlightTravelClasses(List<TravelClassDto> list) {
+		return list.stream().map(c -> {
+			TravelClass travelClass = new TravelClass();
+			travelClass.setMaxSeats(c.getMaxSeats());
+			travelClass.setTravelClass(c.getTravelClass());
+
+			return travelClass;
+		}).collect(Collectors.toList());
 	}
 
 }

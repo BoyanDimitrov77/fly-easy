@@ -32,12 +32,18 @@ public class Bonus {
 	private User user;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "airline")
+	@JoinColumn(name = "airline_id")
 	private Airline airline;
 	
-	@Column(name = "amount")
-	private BigDecimal amount;
-	
+	@Column(name = "percent")
+	private BigDecimal percent;
+
+	@Column(name = "expired_date")
+	private Date expiredDate;
+
+	@Column(name = "is_used")
+	private Boolean isUsed;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "timestamp")
 	private Date timestamp;

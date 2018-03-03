@@ -2,7 +2,9 @@ package com.fly.easy.flyeasy.db.model;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,7 +12,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -53,14 +57,15 @@ public class Flight {
 	@Column(name = "price")
 	private BigDecimal price;
 
-	@Column(name = "seats")
-	private int seats;
-
-	@Column(name = "class")
-	private String travelClass;
-
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "timestamp")
 	private Date timestamp;
+
+	@OneToMany(cascade = CascadeType.PERSIST)
+	@JoinTable(
+			name="travel_class_flight",
+			joinColumns = @JoinColumn(name = "flight_id"),
+			inverseJoinColumns = @JoinColumn(name = "travel_class_id"))
+	private List<TravelClass> travelClasses;
 
 }
