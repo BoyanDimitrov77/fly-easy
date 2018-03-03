@@ -2,6 +2,7 @@ package com.fly.easy.flyeasy.api.dto;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fly.easy.flyeasy.db.model.Flight;
@@ -28,9 +29,7 @@ public class FlightDto {
 
 	private BigDecimal price;
 
-	private int seats;
-
-	private String travelClass;
+	private List<TravelClassDto> travelClasses;
 
 	public FlightDto() {
 		super();
@@ -38,7 +37,7 @@ public class FlightDto {
 	}
 
 	public FlightDto(long id, AirlineDto airLine, String flightName, LocationDto locationFrom, LocationDto locationTo,
-			Date departDate, Date arriveDate, BigDecimal price, int seats, String travelClass) {
+			Date departDate, Date arriveDate, BigDecimal price,	List<TravelClassDto> travelClasses) {
 		super();
 		this.id = id;
 		this.airLine = airLine;
@@ -48,8 +47,7 @@ public class FlightDto {
 		this.departDate = departDate;
 		this.arriveDate = arriveDate;
 		this.price = price;
-		this.seats = seats;
-		this.travelClass = travelClass;
+		this.travelClasses = travelClasses;
 	}
 
 	public static FlightDto of(Flight flight) {
@@ -57,7 +55,8 @@ public class FlightDto {
 				f -> FlightDto.builder().id(f.getId()).airLine(AirlineDto.of(f.getAirline())).flightName(f.getName())
 						.locationFrom(LocationDto.of(f.getLocationFrom())).locationTo(LocationDto.of(f.getLocationTo()))
 						.departDate(f.getDepartDate()).arriveDate(f.getArriveDate()).price(f.getPrice())
-						.seats(f.getSeats()).travelClass(f.getTravelClass()).build());
+						.travelClasses(TravelClassDto.of(f.getTravelClasses()))
+						.build());
 	}
 
 }

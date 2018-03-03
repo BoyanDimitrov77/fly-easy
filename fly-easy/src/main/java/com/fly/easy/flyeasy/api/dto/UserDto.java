@@ -1,11 +1,16 @@
 package com.fly.easy.flyeasy.api.dto;
 
 import java.security.Principal;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fly.easy.flyeasy.db.model.Bonus;
 import com.fly.easy.flyeasy.db.model.User;
 import com.fly.easy.flyeasy.util.FlyEasyApp;
 
@@ -62,6 +67,10 @@ public class UserDto implements Principal {
     @Setter
     private PictureDto profilePicture;
 
+	@Getter
+	@Setter
+	private List<BonusDto> bonuses;
+
     @Tolerate
 	public UserDto() {
 	}
@@ -73,6 +82,8 @@ public class UserDto implements Principal {
 
     public static UserDto of(User user) {
 
+    LocalDate now = LocalDate.now();
+
 	return FlyEasyApp.ofNullable(user, u->UserDto.builder()
 				.id(u.getId())
                 .email(u.getEmail())
@@ -81,6 +92,7 @@ public class UserDto implements Principal {
                 .enabled(u.isEnabled())
                 .timestamp(u.getTimestamp())
                 .profilePicture(PictureDto.of(u.getProfilePicture()))
+                .bonuses( u.getBonuses() != null ? BonusDto.of(u.getBonuses().stream().filter(b->b.getExpiredDate().toInstant().atZone(ZoneId.of("UTC")).toLocalDate().isAfter(now)).collect(Collectors.toList())) : null)
                 .build());
     }
 }

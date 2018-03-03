@@ -38,6 +38,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("flight/create/createFlightRecord/**").hasRole("ADMIN")
                 .antMatchers("flight/all").hasAnyRole("ADMIN","USER")
                 .antMatchers("flight/**").hasAnyRole("USER")
+                .antMatchers("booking/**").hasAnyRole("USER")
     
                     .and()
                 .addFilterBefore(new CorsFilter(), ChannelProcessingFilter.class)

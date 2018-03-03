@@ -17,9 +17,20 @@ public class ResourceDto {
 
 	//private Date timeCreated;
 
+	public ResourceDto() {
+		super();
+	}
+
+	public ResourceDto(String id, String value) {
+		super();
+		this.id = id;
+		this.value = value;
+	}
+
 	public static final ResourceDto of(Resource resource) {
 		return ResourceDto.builder().id(resource.getId()).value(resource.getValue())
 				//.timeCreated(resource.getTimeCreated())
 				.build();
 	}
+
 }

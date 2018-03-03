@@ -9,4 +9,5 @@ import com.fly.easy.flyeasy.db.model.User;
 public interface UserRepository extends JpaRepository<User, Long>{
 
 	User findByEmail(String email);
+
 }

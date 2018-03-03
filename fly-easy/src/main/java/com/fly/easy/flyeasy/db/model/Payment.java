@@ -35,7 +35,10 @@ public class Payment {
 	
 	@Column(name="status")
 	private String status;
-	
+
+	@Column(name = "discount")
+	private BigDecimal discount;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "timestamp")
 	private Date timestamp;
