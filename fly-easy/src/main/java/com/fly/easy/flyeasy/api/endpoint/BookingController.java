@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fly.easy.flyeasy.api.dto.BookingDto;
+import com.fly.easy.flyeasy.api.dto.FlightBookingDto;
+import com.fly.easy.flyeasy.api.dto.HotelBookingDto;
 import com.fly.easy.flyeasy.api.dto.PassengerTicketDto;
-import com.fly.easy.flyeasy.api.dto.PaymentDto;
-import com.fly.easy.flyeasy.db.model.Payment;
 import com.fly.easy.flyeasy.service.interfaces.BookingService;
+import com.fly.easy.flyeasy.service.interfaces.HotelService;
 import com.fly.easy.flyeasy.util.UserUtil;
 
 @RestController
@@ -30,37 +30,61 @@ public class BookingController {
 	@Autowired
 	private BookingService bookingService;
 
+	@Autowired
+	private HotelService hotelService;
+
 	@RequestMapping(method = RequestMethod.POST, value = "/bookFlight/{flightId}")
 	@Transactional
-	public ResponseEntity<BookingDto> bookFlight(@PathVariable("flightId") long flightId,
+	public ResponseEntity<FlightBookingDto> bookFlight(@PathVariable("flightId") long flightId,
 			SecurityContextHolder contex) {
 
-		BookingDto bookFlight = bookingService.bookFlight(flightId, UserUtil.gerUserFromContext().getId());
+		FlightBookingDto bookFlight = bookingService.bookFlight(flightId, UserUtil.gerUserFromContext().getId());
 
 		return new ResponseEntity<>(bookFlight, HttpStatus.OK);
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/bookFlight/passengers/{flightBookId}/{travelClassId}")
 	@Transactional
-	public ResponseEntity<BookingDto> addPassengerToFlightBook(@PathVariable("flightBookId") long flightBookId,
+	public ResponseEntity<FlightBookingDto> addPassengerToFlightBook(@PathVariable("flightBookId") long flightBookId,
 			@PathVariable("travelClassId") long travelClassId,
 			@RequestBody List<PassengerTicketDto> PassengerTicketDtos) {
 
-		BookingDto dto = bookingService.addPassengerFlightBook(flightBookId, travelClassId, PassengerTicketDtos);
+		FlightBookingDto dto = bookingService.addPassengerFlightBook(flightBookId, travelClassId, PassengerTicketDtos);
 
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/bookFlight/payment")
 	@Transactional
-	public ResponseEntity<PaymentDto> payBookedFlight(@RequestParam(value = "paymentId") String paymentId,
-			@RequestParam(value = "amount") String amount, @RequestParam(value = "flightBookId") String flightBookId,
+	public ResponseEntity<FlightBookingDto> payBookedFlight(@RequestParam(value = "amount") String amount,
+			@RequestParam(value = "flightBookId") String flightBookId,
 			@RequestParam(value = "bonusId", required = false) String bonusId) {
 
-		Payment payBookedFlight = bookingService.payBookedFlight(Long.parseLong(paymentId), new BigDecimal(amount),
+		FlightBookingDto payBookedFlight = bookingService.payBookedFlight(new BigDecimal(amount),
 				Long.parseLong(flightBookId), bonusId);
 
-		return new ResponseEntity<>(PaymentDto.of(payBookedFlight), HttpStatus.OK);
+		return new ResponseEntity<>(payBookedFlight, HttpStatus.OK);
+	}
+
+	@RequestMapping(method = RequestMethod.POST, value = "/bookHotel/{hoteRoomId}")
+	@Transactional
+	public ResponseEntity<HotelBookingDto> bookHotel(@PathVariable("hoteRoomId") long hotelRoomId,
+			SecurityContextHolder context) {
+
+		HotelBookingDto dto = hotelService.bookHotel(hotelRoomId, UserUtil.gerUserFromContext().getId());
+
+		return new ResponseEntity<>(dto, HttpStatus.OK);
+	}
+
+	@RequestMapping(method = RequestMethod.POST, value = "/bookHotel/payment")
+	@Transactional
+	public ResponseEntity<HotelBookingDto> payHotel(@RequestParam(value = "hotelBookId") String hotelBookId,
+			@RequestParam(value = "amount") String amount) {
+
+		HotelBookingDto dto = hotelService.payHotel(Long.parseLong(hotelBookId), new BigDecimal(amount));
+
+		return new ResponseEntity<>(dto, HttpStatus.OK);
+
 	}
 
 }

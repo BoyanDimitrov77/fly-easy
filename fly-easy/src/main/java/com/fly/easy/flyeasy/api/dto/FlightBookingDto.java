@@ -10,7 +10,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class BookingDto {
+public class FlightBookingDto {
 
 	private long id;
 
@@ -24,9 +24,9 @@ public class BookingDto {
 
 	private List<PassengerTicketDto> passengerTickets;
 
-	public static BookingDto of(FlightBook flightBook) {
+	public static FlightBookingDto of(FlightBook flightBook) {
 		return FlyEasyApp.ofNullable(flightBook,
-				fb -> BookingDto.builder().id(fb.getId()).flight(FlightDto.of(fb.getFlight()))
+				fb -> FlightBookingDto.builder().id(fb.getId()).flight(FlightDto.of(fb.getFlight()))
 						.booker(UserDto.of(fb.getBooker())).payment(PaymentDto.of(fb.getPayment()))
 						.passengerTickets(PassengerTicketDto.of(fb.getPassengerTickets())).status(fb.getStatus())
 						.build());

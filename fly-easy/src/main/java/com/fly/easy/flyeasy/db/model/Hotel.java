@@ -3,6 +3,7 @@ package com.fly.easy.flyeasy.db.model;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -49,6 +50,8 @@ public class Hotel {
 			joinColumns = @JoinColumn(name = "hotel_id"),
 			inverseJoinColumns =@JoinColumn(name = "picture_id"))
 	private List<Picture> hotelPictures;
-	
+
+	@OneToMany(fetch=FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "hotel")
+	private List<HotelRoom> hotelRooms;
 
 }
