@@ -5,6 +5,7 @@ import java.text.ParseException;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fly.easy.flyeasy.api.dto.UpdateUserInformationDto;
 import com.fly.easy.flyeasy.api.dto.UserDto;
 import com.fly.easy.flyeasy.db.model.User;
 import com.fly.easy.flyeasy.db.model.UserRoleEnum;
@@ -27,4 +28,6 @@ public interface UserService {
 	void resetPasswrodRequest(String userEmail) throws CannotSendEmailException;
 
 	UserDto uploadProfilePhoto(MultipartFile file, UserDto userDto )throws IOException;
+
+	UpdateUserInformationDto updateUserInformation(UpdateUserInformationDto dto , long userId);
 }

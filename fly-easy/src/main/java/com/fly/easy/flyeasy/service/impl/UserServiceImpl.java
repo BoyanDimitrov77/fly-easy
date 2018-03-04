@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fly.easy.flyeasy.api.common.ApiException;
 import com.fly.easy.flyeasy.api.dto.PictureDto;
+import com.fly.easy.flyeasy.api.dto.UpdateUserInformationDto;
 import com.fly.easy.flyeasy.api.dto.UserDto;
 import com.fly.easy.flyeasy.db.model.Picture;
 import com.fly.easy.flyeasy.db.model.User;
@@ -23,6 +24,7 @@ import com.fly.easy.flyeasy.db.model.VerificationToken;
 import com.fly.easy.flyeasy.db.repository.PictureRepository;
 import com.fly.easy.flyeasy.db.repository.UserRepository;
 import com.fly.easy.flyeasy.db.repository.UserRoleRepository;
+import com.fly.easy.flyeasy.service.interfaces.LocationService;
 import com.fly.easy.flyeasy.service.interfaces.MailService;
 import com.fly.easy.flyeasy.service.interfaces.PictureService;
 import com.fly.easy.flyeasy.service.interfaces.UserService;
@@ -57,6 +59,9 @@ public class UserServiceImpl implements UserService{
 
 	@Autowired
 	private PictureRepository pictureRepository;
+
+	@Autowired
+	private LocationService locationService;
 
 	public PasswordEncoder getPasswordEncoder(){
 		return this.passwordEncoder;
@@ -169,6 +174,32 @@ public class UserServiceImpl implements UserService{
 
 		return saveUser;
 
+	}
+
+	@Override
+	public UpdateUserInformationDto updateUserInformation(UpdateUserInformationDto dto, long userId) {
+
+		User user = userRepository.findOne(userId);
+
+		if (dto.getEmail() != null) {
+			user.setEmail(dto.getEmail());
+		}
+
+		if (dto.getFullName() != null) {
+			user.setFullName(dto.getFullName());
+		}
+
+		if (dto.getBirthDate() != null) {
+			user.setBirthDate(dto.getBirthDate());
+		}
+
+		if (dto.getLocation() != null) {
+			user.setLocation(locationService.createLocation(dto.getLocation()));
+		}
+
+		User saveUser = userRepository.saveAndFlush(user);
+
+		return UpdateUserInformationDto.of(saveUser);
 	}
 
 }
