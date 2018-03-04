@@ -3,6 +3,7 @@ package com.fly.easy.flyeasy.api.dto;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,7 +11,6 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fly.easy.flyeasy.db.model.Bonus;
 import com.fly.easy.flyeasy.db.model.User;
 import com.fly.easy.flyeasy.util.FlyEasyApp;
 
@@ -71,6 +71,15 @@ public class UserDto implements Principal {
 	@Setter
 	private List<BonusDto> bonuses;
 
+	@Getter
+	@Setter
+	@JsonFormat(pattern = "dd-MM-yyyy", timezone = "UTC")
+	private Date birthDate;
+
+	@Getter
+	@Setter
+	private LocationDto location;
+
     @Tolerate
 	public UserDto() {
 	}
@@ -92,7 +101,9 @@ public class UserDto implements Principal {
                 .enabled(u.isEnabled())
                 .timestamp(u.getTimestamp())
                 .profilePicture(PictureDto.of(u.getProfilePicture()))
-                .bonuses( u.getBonuses() != null ? BonusDto.of(u.getBonuses().stream().filter(b->b.getExpiredDate().toInstant().atZone(ZoneId.of("UTC")).toLocalDate().isAfter(now)).collect(Collectors.toList())) : null)
+                .birthDate(u.getBirthDate())
+                .location(LocationDto.of(u.getLocation()))
+                .bonuses( u.getBonuses() != null ? BonusDto.of(u.getBonuses().stream().filter(b->b.getExpiredDate().toInstant().atZone(ZoneId.of("UTC")).toLocalDate().isAfter(now)).collect(Collectors.toList())) : new ArrayList<>())
                 .build());
     }
 }

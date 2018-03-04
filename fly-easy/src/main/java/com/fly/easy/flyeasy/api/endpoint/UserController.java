@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fly.easy.flyeasy.api.common.ApiException;
 import com.fly.easy.flyeasy.api.dto.PictureDto;
+import com.fly.easy.flyeasy.api.dto.UpdateUserInformationDto;
 import com.fly.easy.flyeasy.api.dto.UserDto;
 import com.fly.easy.flyeasy.service.interfaces.UserService;
 import com.fly.easy.flyeasy.util.UserUtil;
@@ -60,6 +61,17 @@ public class UserController {
 		}
 
 		return new ResponseEntity<>(profilePicture, HttpStatus.OK);
+	}
+
+	@RequestMapping(method = RequestMethod.POST, value = "/updatePersonalInformation")
+	public ResponseEntity<UpdateUserInformationDto> updatePersonalInformation(@RequestBody UpdateUserInformationDto dto,
+			SecurityContextHolder contex) {
+
+		UpdateUserInformationDto updateUserInformationDto = userService.updateUserInformation(dto,
+				UserUtil.gerUserFromContext().getId());
+
+		return new ResponseEntity<>(updateUserInformationDto, HttpStatus.OK);
+
 	}
 
 }
