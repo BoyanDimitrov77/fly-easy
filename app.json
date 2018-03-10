@@ -1,0 +1,7 @@
+{
+  "name": "Fly Easy App",
+  "description": "Fly Easy App",
+  "repository": "https://github.com/BoyanDimitrov77/fly-easy",
+  "image": "heroku/java",
+  "addons": [ "heroku-postgresql" ]
+}
