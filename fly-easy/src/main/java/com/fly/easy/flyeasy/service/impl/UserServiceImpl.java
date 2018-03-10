@@ -2,6 +2,7 @@ package com.fly.easy.flyeasy.service.impl;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.function.BiConsumer;
 
 import org.dozer.Mapper;
@@ -96,6 +97,7 @@ public class UserServiceImpl implements UserService{
 		userModel.setEnabled(false);
 		userModel.setPassword(passwordEncoder.encode(userModel.getPassword()));
 		userModel.setUserName(userDto.getUserName());
+		userModel.setTimestamp(new Date());
 
 		savedUser = userRepository.save(userModel);
 		savedUser = addRole(savedUser, UserRoleEnum.USER);

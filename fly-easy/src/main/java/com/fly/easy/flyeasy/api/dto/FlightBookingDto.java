@@ -1,5 +1,6 @@
 package com.fly.easy.flyeasy.api.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fly.easy.flyeasy.db.model.FlightBook;
@@ -28,7 +29,7 @@ public class FlightBookingDto {
 		return FlyEasyApp.ofNullable(flightBook,
 				fb -> FlightBookingDto.builder().id(fb.getId()).flight(FlightDto.of(fb.getFlight()))
 						.booker(UserDto.of(fb.getBooker())).payment(PaymentDto.of(fb.getPayment()))
-						.passengerTickets(PassengerTicketDto.of(fb.getPassengerTickets())).status(fb.getStatus())
+						.passengerTickets(fb.getPassengerTickets()!=null ? PassengerTicketDto.of(fb.getPassengerTickets()):new ArrayList<>()).status(fb.getStatus())
 						.build());
 
 	}

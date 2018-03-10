@@ -1,6 +1,7 @@
 package com.fly.easy.flyeasy.service.impl;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -87,6 +88,7 @@ public class HotelServiceImpl implements HotelService {
 		hotelBook.setUser(booker);
 		hotelBook.setPayment(paymentService.createPaymentRecord(booker));
 		hotelBook.setStatus(BookStatus.WAITING.toString());
+		hotelBook.setTimestamp(new Date());
 
 		HotelBook saveHotelBook = hotelBookRepository.saveAndFlush(hotelBook);
 
@@ -113,6 +115,7 @@ public class HotelServiceImpl implements HotelService {
 		hotel.setDescription(hotelDto.getDescription());
 		hotel.setLocation(locationService.createLocation(hotelDto.getLocation().getName()));
 		hotel.setHotelRooms(createHotelRoom(hotelDto.getHotelRooms(), hotel));
+		hotel.setTimestamp(new Date());
 
 		Hotel saveHotel = hotelRepository.saveAndFlush(hotel);
 

@@ -40,7 +40,7 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     @Value("${server.contextPath}")
     private String restUrl;
 
-    //private final static String mailUrl = "https://tripsyclub.app.link?action=";
+    //private final static String mailUrl = "https://flyeasy.app.link?action=";
 
     @Override
     public VerificationToken generateTokenForUser(User user) {

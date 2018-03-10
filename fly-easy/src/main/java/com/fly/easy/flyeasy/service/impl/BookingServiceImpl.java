@@ -1,6 +1,7 @@
 package com.fly.easy.flyeasy.service.impl;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,6 +67,7 @@ public class BookingServiceImpl implements BookingService {
 		flightBook.setBooker(user);
 		flightBook.setPayment(paymentService.createPaymentRecord(user));
 		flightBook.setStatus(BookStatus.WAITING.toString());
+		flightBook.setTimestamp(new Date());
 
 		FlightBook saveFlightBook = flightBookRepository.saveAndFlush(flightBook);
 
@@ -136,6 +138,7 @@ public class BookingServiceImpl implements BookingService {
 			passengerTicket.setEmail(passengerTicketDto.getEmail());
 			passengerTicket.setTicketNumber(generateTicketNumber());
 			passengerTicket.setBoardSeatNumber(generateSeatNum(travelClassId));
+			passengerTicket.setTimestamp(new Date());
 
 			return passengerTicket;
 
