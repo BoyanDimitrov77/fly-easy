@@ -13,19 +13,19 @@ public interface FlightRepository extends JpaRepository<Flight, Long>{
 	
 	Flight findById(long id);
 
-	@Query("SELECT fl FROM Flight fl WHERE fl.departDate>=CURDATE() ORDER BY fl.departDate")
+	@Query("SELECT fl FROM Flight fl WHERE fl.departDate>=NOW() ORDER BY fl.departDate")
 	List<Flight> findAllFlights();
 
 	@Query("SELECT fl FROM Flight fl WHERE Date(fl.departDate) >= Date(:fromDate) and Date(fl.departDate) <= Date(:toDate) ORDER BY fl.departDate")
 	List<Flight> findAllFlightBetweenDates(@Param("fromDate")Date fromDate ,@Param("toDate") Date toDate);
 
-	@Query("SELECT fl FROM Flight fl WHERE fl.departDate>=CURDATE() ORDER BY fl.price ASC")
+	@Query("SELECT fl FROM Flight fl WHERE fl.departDate>=NOW() ORDER BY fl.price ASC")
 	List<Flight> findFlightsByPrice();
 
 	@Query("SELECT fl FROM Flight fl WHERE fl.locationFrom.name = :locationFrom AND fl.locationTo.name = :locationTo ORDER BY fl.departDate")
 	List<Flight> findFlightsByLocation(@Param("locationFrom") String locationFrom,@Param("locationTo") String locationTo);
 
-	@Query("SELECT fl FROM Flight fl WHERE fl.departDate>=CURDATE() ORDER BY fl.airline.rating DESC")
+	@Query("SELECT fl FROM Flight fl WHERE fl.departDate>=NOW() ORDER BY fl.airline.rating DESC")
 	List<Flight> findFlightsByRatingAirline();
 
 }

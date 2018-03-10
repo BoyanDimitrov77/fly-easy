@@ -1,6 +1,7 @@
 package com.fly.easy.flyeasy.service.impl;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,7 @@ public class PaymentServiceImpl implements PaymentService{
 		payment.setStatus(PaymentStatus.PENDING.toString());
 		payment.setAmount(BigDecimal.ZERO);
 		payment.setDiscount(BigDecimal.ZERO);
+		payment.setTimestamp(new Date());
 
 		Payment savePayment = paymentRepository.saveAndFlush(payment);
 

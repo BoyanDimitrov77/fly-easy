@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -16,7 +17,8 @@ public class TravelClass {
 
 	@Id
 	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "travel_class_id_seq")
+	@SequenceGenerator(name = "travel_class_id_seq", sequenceName = "travel_class_id_seq", allocationSize = 1)
 	private long id;
 
 	@Column(name = "max_seats")

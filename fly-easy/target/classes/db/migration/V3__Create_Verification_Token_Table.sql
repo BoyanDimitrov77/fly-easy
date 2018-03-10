@@ -1,10 +1,10 @@
-CREATE TABLE IF NOT EXISTS `verification_token`(
-   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `token` VARCHAR(64) NOT NULL,
-  `user_id` INT(11) NOT NULL,
-  `expiry_date` DATETIME NOT NULL,
-  `verified` TINYINT(1) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `ix_verification_token` (`user_id`),
-  CONSTRAINT `FK_Verification_Token_User` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-	)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE IF NOT EXISTS verification_token(
+   id SERIAL,
+  token VARCHAR(64) NOT NULL,
+  user_id INTEGER NOT NULL,
+  expiry_date TIMESTAMP(0) with time zone NOT NULL,
+  verified BOOLEAN NOT NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT ix_verification_token UNIQUE  (user_id),
+  CONSTRAINT FK_Verification_Token_User FOREIGN KEY (user_id) REFERENCES users (id)
+	);

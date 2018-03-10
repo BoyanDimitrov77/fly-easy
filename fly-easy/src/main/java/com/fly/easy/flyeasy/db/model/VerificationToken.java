@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import lombok.Builder;
@@ -22,7 +23,8 @@ import lombok.Data;
 public class VerificationToken {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "verification_token_id_seq")
+	@SequenceGenerator(name = "verification_token_id_seq", sequenceName = "verification_token_id_seq", allocationSize = 1)
     private Long id;
 
     @Column(name = "token")
@@ -32,7 +34,7 @@ public class VerificationToken {
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
 
-    @Column(name = "expiry_date")
+    @Column(name = "expiry_date",nullable = false,columnDefinition=" timestamp with time zone")
     private Date expiryDate;
     
     @Column(name = "verified")
