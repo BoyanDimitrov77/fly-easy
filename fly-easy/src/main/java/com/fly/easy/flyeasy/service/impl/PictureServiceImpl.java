@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.fly.easy.flyeasy.api.common.ApiException;
 import com.fly.easy.flyeasy.api.dto.PictureDto;
 import com.fly.easy.flyeasy.db.model.Picture;
 import com.fly.easy.flyeasy.db.model.PictureSize;
@@ -115,6 +116,17 @@ public class PictureServiceImpl implements PictureService {
 		default:
 			return null;
 		}
+	}
+
+	@Override
+	public Picture getPictureById(String pictureId) {
+
+		Picture picture = pictureRepository.findOne(pictureId);
+		if (picture == null) {
+			throw new ApiException("Picture not found");
+		}
+
+		return picture;
 	}
 
 }
