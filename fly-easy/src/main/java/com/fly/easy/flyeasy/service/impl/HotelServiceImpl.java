@@ -1,22 +1,28 @@
 package com.fly.easy.flyeasy.service.impl;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fly.easy.flyeasy.api.common.ApiException;
 import com.fly.easy.flyeasy.api.dto.HotelBookingDto;
 import com.fly.easy.flyeasy.api.dto.HotelDto;
 import com.fly.easy.flyeasy.api.dto.HotelRoomDto;
+import com.fly.easy.flyeasy.api.dto.PictureDto;
 import com.fly.easy.flyeasy.db.model.BookStatus;
 import com.fly.easy.flyeasy.db.model.Hotel;
 import com.fly.easy.flyeasy.db.model.HotelBook;
 import com.fly.easy.flyeasy.db.model.HotelRoom;
 import com.fly.easy.flyeasy.db.model.Location;
+import com.fly.easy.flyeasy.db.model.Picture;
 import com.fly.easy.flyeasy.db.model.User;
 import com.fly.easy.flyeasy.db.repository.HotelBookRepository;
 import com.fly.easy.flyeasy.db.repository.HotelRepository;
@@ -25,6 +31,8 @@ import com.fly.easy.flyeasy.db.repository.UserRepository;
 import com.fly.easy.flyeasy.service.interfaces.HotelService;
 import com.fly.easy.flyeasy.service.interfaces.LocationService;
 import com.fly.easy.flyeasy.service.interfaces.PaymentService;
+import com.fly.easy.flyeasy.service.interfaces.PictureService;
+import com.fly.easy.flyeasy.util.PictureUtil;
 
 @Service
 public class HotelServiceImpl implements HotelService {
@@ -46,6 +54,9 @@ public class HotelServiceImpl implements HotelService {
 
 	@Autowired
 	private LocationService locationService;
+
+	@Autowired
+	private PictureService pictureService;
 
 	@Override
 	public List<HotelDto> findHotelsByCurrentDestionation(long locationId) {
@@ -132,5 +143,36 @@ public class HotelServiceImpl implements HotelService {
 
 			return hotelRoom;
 		}).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<PictureDto> uploadHotelPicutures(long hotelId, MultipartFile[] files) throws IOException {
+
+		Hotel hotel = hotelRepository.findOne(hotelId);
+
+		Hotel savedHotel = setHotelPctures(files, hotel, Hotel::setHotelPictures);
+
+		return savedHotel.getHotelPictures().stream().map(picture -> PictureDto.of(picture))
+				.collect(Collectors.toList());
+	}
+
+	private Hotel setHotelPctures(MultipartFile[] files, Hotel hotel, BiConsumer<Hotel, List<Picture>> setter)
+			throws IOException {
+
+		List<PictureDto> pictureDtos = new ArrayList<>();
+
+		for (MultipartFile file : files) {
+			PictureDto savePicure = pictureService.savePicure(PictureUtil.getImageFromMultipartFile(file),
+					hotel.getHotelName());
+			pictureDtos.add(savePicure);
+		}
+
+		List<Picture> hotelPictures = pictureDtos.stream()
+				.map(pictureDto -> pictureService.getPictureById(pictureDto.getId())).collect(Collectors.toList());
+		setter.accept(hotel, hotelPictures);
+
+		Hotel saveHotel = hotelRepository.saveAndFlush(hotel);
+
+		return saveHotel;
 	}
 }

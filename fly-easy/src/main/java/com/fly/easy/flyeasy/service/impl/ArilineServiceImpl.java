@@ -13,7 +13,6 @@ import com.fly.easy.flyeasy.api.dto.PictureDto;
 import com.fly.easy.flyeasy.db.model.Airline;
 import com.fly.easy.flyeasy.db.model.Picture;
 import com.fly.easy.flyeasy.db.repository.AirlineRepository;
-import com.fly.easy.flyeasy.db.repository.PictureRepository;
 import com.fly.easy.flyeasy.service.interfaces.AirlineService;
 import com.fly.easy.flyeasy.service.interfaces.PictureService;
 import com.fly.easy.flyeasy.util.PictureUtil;
@@ -26,9 +25,6 @@ public class ArilineServiceImpl implements AirlineService {
 
 	@Autowired
 	private PictureService pictureService;
-
-	@Autowired
-	private PictureRepository pictureRepository;
 
 	@Override
 	public AirlineDto createAirline(AirlineDto airlineDto) {
@@ -62,7 +58,7 @@ public class ArilineServiceImpl implements AirlineService {
 
 		PictureDto saveLogo = pictureService.savePicure(PictureUtil.getImageFromMultipartFile(logo),
 				airline.getAirlineName());
-		logoSetter.accept(airline, pictureRepository.findOne(saveLogo.getId()));
+		logoSetter.accept(airline, pictureService.getPictureById(saveLogo.getId()));
 
 		Airline savedAirline = airlineRepository.saveAndFlush(airline);
 

@@ -22,7 +22,6 @@ import com.fly.easy.flyeasy.db.model.UserRole;
 import com.fly.easy.flyeasy.db.model.UserRoleEnum;
 import com.fly.easy.flyeasy.db.model.UserRolePk;
 import com.fly.easy.flyeasy.db.model.VerificationToken;
-import com.fly.easy.flyeasy.db.repository.PictureRepository;
 import com.fly.easy.flyeasy.db.repository.UserRepository;
 import com.fly.easy.flyeasy.db.repository.UserRoleRepository;
 import com.fly.easy.flyeasy.service.interfaces.LocationService;
@@ -57,9 +56,6 @@ public class UserServiceImpl implements UserService{
 
 	@Autowired
 	private PictureService pictureService;
-
-	@Autowired
-	private PictureRepository pictureRepository;
 
 	@Autowired
 	private LocationService locationService;
@@ -171,7 +167,7 @@ public class UserServiceImpl implements UserService{
 		PictureDto savePicure = pictureService.savePicure(PictureUtil.getImageFromMultipartFile(file),
 				userDto.getUserName());
 		User user = userRepository.findOne(userDto.getId());
-		pictureSetter.accept(user, pictureRepository.findOne(savePicure.getId()));
+		pictureSetter.accept(user, pictureService.getPictureById(savePicure.getId()));
 		User saveUser = userRepository.saveAndFlush(user);
 
 		return saveUser;
