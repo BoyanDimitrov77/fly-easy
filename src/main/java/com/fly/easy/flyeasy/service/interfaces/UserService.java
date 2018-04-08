@@ -30,4 +30,6 @@ public interface UserService {
 	UserDto uploadProfilePhoto(MultipartFile file, UserDto userDto )throws IOException;
 
 	UpdateUserInformationDto updateUserInformation(UpdateUserInformationDto dto , long userId);
+
+	UserDto findUser(long userId);
 }

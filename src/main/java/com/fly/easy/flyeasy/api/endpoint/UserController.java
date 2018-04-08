@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -72,6 +73,12 @@ public class UserController {
 
 		return new ResponseEntity<>(updateUserInformationDto, HttpStatus.OK);
 
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/{id}")
+	public ResponseEntity<UserDto> getUser(@PathVariable("id") long userId) {
+
+		return new ResponseEntity<>(userService.findUser(userId), HttpStatus.OK);
 	}
 
 }

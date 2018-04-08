@@ -200,4 +200,9 @@ public class UserServiceImpl implements UserService{
 		return UpdateUserInformationDto.of(saveUser);
 	}
 
+	@Override
+	public UserDto findUser(long userId) {
+		return UserDto.of(userRepository.findOne(userId));
+	}
+
 }
