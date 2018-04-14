@@ -1,5 +1,6 @@
 package com.fly.easy.flyeasy.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.fly.easy.flyeasy.api.common.ApiException;
 import com.fly.easy.flyeasy.api.dto.FlightDto;
+import com.fly.easy.flyeasy.api.dto.SearchFilterDto;
 import com.fly.easy.flyeasy.api.dto.TravelClassDto;
 import com.fly.easy.flyeasy.db.model.Airline;
 import com.fly.easy.flyeasy.db.model.Flight;
@@ -17,6 +19,7 @@ import com.fly.easy.flyeasy.db.repository.AirlineRepository;
 import com.fly.easy.flyeasy.db.repository.FlightRepository;
 import com.fly.easy.flyeasy.service.interfaces.FlightService;
 import com.fly.easy.flyeasy.service.interfaces.LocationService;
+import com.fly.easy.flyeasy.util.SearchUtil;
 
 @Service
 public class FlightServiceImpl implements FlightService {
@@ -105,6 +108,58 @@ public class FlightServiceImpl implements FlightService {
 
 			return travelClass;
 		}).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<FlightDto> searcFlight(SearchFilterDto searchFilterDto) {
+		if (SearchUtil.checkAllFilter(searchFilterDto)) {
+			return flightRepository
+					.findFlightByAllRequirements(searchFilterDto.getLocationFrom(), searchFilterDto.getLocationTo(),
+							searchFilterDto.getDate())
+					.stream().map(flight -> FlightDto.of(flight)).collect(Collectors.toList());
+		} else if (SearchUtil.checkFitlerWitPriceWithoutRating(searchFilterDto)) {
+			return flightRepository
+					.findFlightByLocationAndDateAndPriceWithoutRating(searchFilterDto.getLocationFrom(),
+							searchFilterDto.getLocationTo(), searchFilterDto.getDate())
+					.stream().map(flight -> FlightDto.of(flight)).collect(Collectors.toList());
+		} else if (SearchUtil.checkFilterWithRatingWithoutPrice(searchFilterDto)) {
+			return flightRepository
+					.findFlightByLocationAndDateAndRatingWithoutPrice(searchFilterDto.getLocationFrom(),
+							searchFilterDto.getLocationTo(), searchFilterDto.getDate())
+					.stream().map(flight -> FlightDto.of(flight)).collect(Collectors.toList());
+		} else if (SearchUtil.checkFilterWithPriceAndRatingWithoutDate(searchFilterDto)) {
+			return flightRepository
+					.findFlightByLocationAndPriceAndRatingWithoutDate(searchFilterDto.getLocationFrom(),
+							searchFilterDto.getLocationTo())
+					.stream().map(flight -> FlightDto.of(flight)).collect(Collectors.toList());
+		} else if (SearchUtil.checkFilterWithPriceWithoutDateAndRating(searchFilterDto)) {
+			return flightRepository
+					.findFlightByLocationAndPriceWithoutDateAndRating(searchFilterDto.getLocationFrom(),
+							searchFilterDto.getLocationTo())
+					.stream().map(flight -> FlightDto.of(flight)).collect(Collectors.toList());
+		} else if (SearchUtil.checkFilterWithRatingWithoutDateAndPrice(searchFilterDto)) {
+			return flightRepository
+					.findFlightByLocationAndRatingWithoutDateAndPrice(searchFilterDto.getLocationFrom(),
+							searchFilterDto.getLocationTo())
+					.stream().map(flight -> FlightDto.of(flight)).collect(Collectors.toList());
+		} else if (SearchUtil.checkoFilterOnlyWithPrice(searchFilterDto)) {
+			return flightRepository.findFlightsByPrice().stream().map(flight -> FlightDto.of(flight))
+					.collect(Collectors.toList());
+		} else if (SearchUtil.checkFilterOnlyRating(searchFilterDto)) {
+			return flightRepository.findFlightsByRatingAirline().stream().map(flight -> FlightDto.of(flight))
+					.collect(Collectors.toList());
+		} else if (SearchUtil.checkFilterOnlyLocation(searchFilterDto)) {
+			return flightRepository
+					.findFlightsByLocation(searchFilterDto.getLocationFrom(), searchFilterDto.getLocationTo()).stream()
+					.map(flight -> FlightDto.of(flight)).collect(Collectors.toList());
+		} else if (SearchUtil.checkFilterLocationAndDateWithoutPriceAndRating(searchFilterDto)) {
+			return flightRepository
+					.findFlightByLocationAndDateWitoutPriceAndRating(searchFilterDto.getLocationFrom(),
+							searchFilterDto.getLocationTo(), searchFilterDto.getDate())
+					.stream().map(flight -> FlightDto.of(flight)).collect(Collectors.toList());
+		}
+		return flightRepository.findAllFlights().stream().map(flight -> FlightDto.of(flight))
+				.collect(Collectors.toList());
 	}
 
 }

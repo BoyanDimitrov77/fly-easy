@@ -28,4 +28,24 @@ public interface FlightRepository extends JpaRepository<Flight, Long>{
 	@Query("SELECT fl FROM Flight fl WHERE fl.departDate>=NOW() ORDER BY fl.airline.rating DESC")
 	List<Flight> findFlightsByRatingAirline();
 
+	@Query("SELECT fl FROM Flight fl WHERE fl.locationFrom.name = :locationFrom AND fl.locationTo.name = :locationTo AND Date(fl.departDate) = Date(:toDate) ORDER BY fl.price,fl.airline.rating")
+	List<Flight> findFlightByAllRequirements(@Param("locationFrom") String locationFrom,@Param("locationTo") String locationTo,@Param("toDate") Date toDate);
+
+	@Query("SELECT fl FROM Flight fl WHERE fl.locationFrom.name = :locationFrom AND fl.locationTo.name = :locationTo AND Date(fl.departDate) = Date(:toDate) ORDER BY fl.price")
+	List<Flight> findFlightByLocationAndDateAndPriceWithoutRating(@Param("locationFrom") String locationFrom,@Param("locationTo") String locationTo,@Param("toDate") Date toDate);
+
+	@Query("SELECT fl FROM Flight fl WHERE fl.locationFrom.name = :locationFrom AND fl.locationTo.name = :locationTo AND Date(fl.departDate) = Date(:toDate) ORDER BY fl.airline.rating")
+	List<Flight> findFlightByLocationAndDateAndRatingWithoutPrice(@Param("locationFrom") String locationFrom,@Param("locationTo") String locationTo,@Param("toDate") Date toDate);
+
+	@Query("SELECT fl FROM Flight fl WHERE fl.locationFrom.name = :locationFrom AND fl.locationTo.name = :locationTo ORDER BY fl.price,fl.airline.rating,fl.departDate")
+	List<Flight> findFlightByLocationAndPriceAndRatingWithoutDate(@Param("locationFrom") String locationFrom,@Param("locationTo") String locationTo);
+
+	@Query("SELECT fl FROM Flight fl WHERE fl.locationFrom.name = :locationFrom AND fl.locationTo.name = :locationTo ORDER BY fl.price,fl.departDate")
+	List<Flight> findFlightByLocationAndPriceWithoutDateAndRating(@Param("locationFrom") String locationFrom,@Param("locationTo") String locationTo);
+
+	@Query("SELECT fl FROM Flight fl WHERE fl.locationFrom.name = :locationFrom AND fl.locationTo.name = :locationTo ORDER BY fl.airline.rating,fl.departDate")
+	List<Flight> findFlightByLocationAndRatingWithoutDateAndPrice(@Param("locationFrom") String locationFrom,@Param("locationTo") String locationTo);
+
+	@Query("SELECT fl FROM Flight fl WHERE fl.locationFrom.name = :locationFrom AND fl.locationTo.name = :locationTo AND Date(fl.departDate) = Date(:toDate)")
+	List<Flight> findFlightByLocationAndDateWitoutPriceAndRating(@Param("locationFrom") String locationFrom,@Param("locationTo") String locationTo,@Param("toDate") Date toDate);
 }

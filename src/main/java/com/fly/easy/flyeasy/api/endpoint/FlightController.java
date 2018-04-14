@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fly.easy.flyeasy.api.dto.FilterDateDto;
 import com.fly.easy.flyeasy.api.dto.FilterLocationDto;
 import com.fly.easy.flyeasy.api.dto.FlightDto;
+import com.fly.easy.flyeasy.api.dto.SearchFilterDto;
 import com.fly.easy.flyeasy.service.interfaces.FlightService;
 
 @RestController
@@ -73,6 +74,11 @@ public class FlightController {
 	public List<FlightDto> getFlightsByAirlineRaiting() {
 
 		return flightService.getFlightsByAirlineRaiting();
+	}
+
+	@RequestMapping(method = RequestMethod.POST, value = "/searchFlights")
+	public List<FlightDto> getSearchedFlight(@RequestBody SearchFilterDto searchFilterDto) {
+		return flightService.searcFlight(searchFilterDto);
 	}
 
 }
