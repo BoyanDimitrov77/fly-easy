@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.fly.easy.flyeasy.api.dto.FlightDto;
+import com.fly.easy.flyeasy.api.dto.SearchFilterDto;
 
 public interface FlightService {
 
@@ -20,5 +21,7 @@ public interface FlightService {
 	List<FlightDto> getFlightsByLocation(String locationFrom,String locationTo);
 
 	List<FlightDto> getFlightsByAirlineRaiting();
-	
+
+	List<FlightDto> searcFlight(SearchFilterDto searchFilterDto);
+
 }
