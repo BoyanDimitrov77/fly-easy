@@ -105,6 +105,7 @@ public class FlightServiceImpl implements FlightService {
 			TravelClass travelClass = new TravelClass();
 			travelClass.setMaxSeats(c.getMaxSeats());
 			travelClass.setTravelClass(c.getTravelClass());
+			travelClass.setPrice(c.getPrice());
 
 			return travelClass;
 		}).collect(Collectors.toList());

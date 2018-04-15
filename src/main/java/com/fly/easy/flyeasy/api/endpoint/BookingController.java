@@ -58,10 +58,11 @@ public class BookingController {
 	@Transactional
 	public ResponseEntity<FlightBookingDto> payBookedFlight(@RequestParam(value = "amount") String amount,
 			@RequestParam(value = "flightBookId") String flightBookId,
-			@RequestParam(value = "bonusId", required = false) String bonusId) {
+			@RequestParam(value = "bonusId", required = false) String bonusId,
+			@RequestParam(value = "travelClassId")String travelClassId) {
 
 		FlightBookingDto payBookedFlight = bookingService.payBookedFlight(new BigDecimal(amount),
-				Long.parseLong(flightBookId), bonusId);
+				Long.parseLong(flightBookId), bonusId,Long.parseLong(travelClassId));
 
 		return new ResponseEntity<>(payBookedFlight, HttpStatus.OK);
 	}

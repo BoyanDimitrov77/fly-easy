@@ -1,5 +1,7 @@
 package com.fly.easy.flyeasy.db.model;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,4 +31,7 @@ public class TravelClass {
 
 	@Column(name = "travel_class")
 	private String travelClass;
+
+	@Column(name = "price")
+	private BigDecimal price;
 }
