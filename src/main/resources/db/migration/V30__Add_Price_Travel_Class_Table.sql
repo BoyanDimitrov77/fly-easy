@@ -1,0 +1,2 @@
+ALTER TABLE travel_class
+ADD COLUMN price NUMERIC(10,2) DEFAULT 0;
