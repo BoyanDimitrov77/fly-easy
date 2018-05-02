@@ -1,14 +1,18 @@
 package com.fly.easy.flyeasy.service.impl;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -77,14 +81,16 @@ public class GoogleDriveServiceImpl implements GoogleDriveService {
 	 */
 	private Credential authorize() throws IOException {
 		// Load client secrets.
+
 		InputStream in = GoogleDriveServiceImpl.class.getResourceAsStream("/client_secret.json");
 		GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
 
 		// Build flow and trigger user authorization request.
 		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY,
-				clientSecrets, SCOPES).setDataStoreFactory(DATA_STORE_FACTORY).setAccessType("offline").build();
+				clientSecrets, SCOPES).setDataStoreFactory(DATA_STORE_FACTORY).setAccessType("offline").setApprovalPrompt("force").build();
 		Credential credential = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
 		System.out.println("Credentials saved to " + DATA_STORE_DIR.getAbsolutePath());
+
 		return credential;
 	}
 
@@ -96,6 +102,7 @@ public class GoogleDriveServiceImpl implements GoogleDriveService {
 	 */
 	private Drive getDriveService() throws IOException {
 		Credential credential = authorize();
+		//TODO if tocken is expired after it's checked ,tocken has to be refresh
 		System.out.println(credential.getAccessToken());
 		return new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(APPLICATION_NAME).build();
 
@@ -185,4 +192,59 @@ public class GoogleDriveServiceImpl implements GoogleDriveService {
 		return newfile.getId();
 
 	}
+
+	@Override
+	public String getAccessTokenGD() throws IOException {
+		String token = null;
+		Credential credential = authorize();
+		try {
+			if(checkIfAccessTokenIsExpired(credential.getAccessToken())){
+				credential.refreshToken();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		token = credential.getAccessToken();
+		return token;
+	}
+
+	private boolean checkIfAccessTokenIsExpired(String accessToken) throws Exception {
+
+		String url = "https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=" + accessToken;
+
+		URL obj = new URL(url);
+		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+		// optional default is GET
+		con.setRequestMethod("GET");
+
+		InputStream inputStream = null;
+		if (con.getResponseCode() < HttpURLConnection.HTTP_BAD_REQUEST) {
+			inputStream = con.getInputStream();
+		} else {
+			inputStream = con.getErrorStream();
+		}
+
+		BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
+		String inputLine;
+		StringBuffer response = new StringBuffer();
+
+		while ((inputLine = in.readLine()) != null) {
+			response.append(inputLine);
+		}
+		in.close();
+
+		// print result
+		JSONObject object = new JSONObject(response.toString());
+
+		if (object.has("error") && object.get("error").equals("invalid_token")) {
+			return true;
+		}
+
+		System.out.println(response.toString());
+
+		return false;
+
+	}
+
 }

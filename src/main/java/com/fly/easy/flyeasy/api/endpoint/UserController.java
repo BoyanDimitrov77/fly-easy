@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fly.easy.flyeasy.api.common.ApiException;
+import com.fly.easy.flyeasy.api.dto.BasicDto;
 import com.fly.easy.flyeasy.api.dto.PictureDto;
 import com.fly.easy.flyeasy.api.dto.UpdateUserInformationDto;
 import com.fly.easy.flyeasy.api.dto.UserDto;
@@ -79,6 +80,12 @@ public class UserController {
 	public ResponseEntity<UserDto> getUser(@PathVariable("id") long userId) {
 
 		return new ResponseEntity<>(userService.findUser(userId), HttpStatus.OK);
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/accessTokenGD")
+	public ResponseEntity<BasicDto<String>> getAccessTokenGD() {
+
+		return new ResponseEntity<>(new BasicDto<>(userService.getAccessTokenGD()), HttpStatus.OK);
 	}
 
 }
