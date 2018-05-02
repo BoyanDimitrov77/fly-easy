@@ -3,7 +3,7 @@ Implementation-Title: fly-easy
 Implementation-Version: 0.0.1-SNAPSHOT
 Built-By: boyan.dimitrov
 Implementation-Vendor-Id: com.fly.easy
-Build-Jdk: 1.8.0_161
+Build-Jdk: 1.8.0_171
 Implementation-URL: http://projects.spring.io/spring-boot/fly-easy/
 Created-By: Maven Integration for Eclipse
 Implementation-Vendor: Pivotal Software, Inc.

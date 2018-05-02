@@ -24,6 +24,7 @@ import com.fly.easy.flyeasy.db.model.UserRolePk;
 import com.fly.easy.flyeasy.db.model.VerificationToken;
 import com.fly.easy.flyeasy.db.repository.UserRepository;
 import com.fly.easy.flyeasy.db.repository.UserRoleRepository;
+import com.fly.easy.flyeasy.service.interfaces.GoogleDriveService;
 import com.fly.easy.flyeasy.service.interfaces.LocationService;
 import com.fly.easy.flyeasy.service.interfaces.MailService;
 import com.fly.easy.flyeasy.service.interfaces.PictureService;
@@ -59,6 +60,9 @@ public class UserServiceImpl implements UserService{
 
 	@Autowired
 	private LocationService locationService;
+
+	@Autowired
+	private GoogleDriveService googleDriveService;
 
 	public PasswordEncoder getPasswordEncoder(){
 		return this.passwordEncoder;
@@ -203,6 +207,17 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public UserDto findUser(long userId) {
 		return UserDto.of(userRepository.findOne(userId));
+	}
+
+	@Override
+	public String getAccessTokenGD() {
+		String accessTokenGD = null;
+		try {
+			accessTokenGD = googleDriveService.getAccessTokenGD();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return accessTokenGD;
 	}
 
 }

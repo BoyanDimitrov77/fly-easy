@@ -32,4 +32,6 @@ public interface UserService {
 	UpdateUserInformationDto updateUserInformation(UpdateUserInformationDto dto , long userId);
 
 	UserDto findUser(long userId);
+
+	String getAccessTokenGD();
 }
