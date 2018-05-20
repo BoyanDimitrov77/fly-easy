@@ -179,7 +179,7 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public UpdateUserInformationDto updateUserInformation(UpdateUserInformationDto dto, long userId) {
+	public UserDto updateUserInformation(UpdateUserInformationDto dto, long userId) {
 
 		User user = userRepository.findOne(userId);
 
@@ -201,12 +201,12 @@ public class UserServiceImpl implements UserService{
 
 		User saveUser = userRepository.saveAndFlush(user);
 
-		return UpdateUserInformationDto.of(saveUser);
+		return UserDto.of(saveUser);
 	}
 
 	@Override
 	public UserDto findUser(long userId) {
-		return UserDto.of(userRepository.findOne(userId));
+		return UserDto.of(userRepository.findById(userId));
 	}
 
 	@Override

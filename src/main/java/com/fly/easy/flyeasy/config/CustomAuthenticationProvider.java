@@ -78,7 +78,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		} else { // regular authentication
 			user = userService.findByEmail(username);
 			if (user == null) {
-		    	System.out.println("FACEBOOK: cant find user by email");
+				//System.out.println("FACEBOOK: cant find user by email");
 				throw new BadCredentialsException("Username not found.");
 			}
 

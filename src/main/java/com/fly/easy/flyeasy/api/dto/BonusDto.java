@@ -25,17 +25,20 @@ public class BonusDto {
 
 	private Boolean isUsed;
 
+	private AirlineDto airlineDto;
+
 	public BonusDto() {
 		super();
 	}
 
-	public BonusDto(long id, long userId, BigDecimal percent, Date expiredDate, Boolean isUsed) {
+	public BonusDto(long id, long userId, BigDecimal percent, Date expiredDate, Boolean isUsed, AirlineDto airlineDto) {
 		super();
 		this.id = id;
 		this.userId = userId;
 		this.percent = percent;
 		this.expiredDate = expiredDate;
 		this.isUsed = isUsed;
+		this.airlineDto = airlineDto;
 	}
 
 	public static List<BonusDto> of(List<Bonus> bonuses) {
@@ -43,7 +46,8 @@ public class BonusDto {
 		return bonuses.stream()
 				.map(bonus -> FlyEasyApp.ofNullable(bonus,
 						b -> BonusDto.builder().id(b.getId()).userId(b.getUser().getId()).percent(b.getPercent())
-								.expiredDate(b.getExpiredDate()).isUsed(b.getIsUsed()).build()))
+								.expiredDate(b.getExpiredDate()).isUsed(b.getIsUsed())
+								.airlineDto(AirlineDto.of(b.getAirline())).build()))
 				.collect(Collectors.toList());
 
 	}
