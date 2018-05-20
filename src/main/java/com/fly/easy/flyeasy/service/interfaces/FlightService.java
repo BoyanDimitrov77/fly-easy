@@ -3,6 +3,7 @@ package com.fly.easy.flyeasy.service.interfaces;
 import java.util.Date;
 import java.util.List;
 
+import com.fly.easy.flyeasy.api.dto.FlightBookingDto;
 import com.fly.easy.flyeasy.api.dto.FlightDto;
 import com.fly.easy.flyeasy.api.dto.SearchFilterDto;
 
@@ -23,5 +24,7 @@ public interface FlightService {
 	List<FlightDto> getFlightsByAirlineRaiting();
 
 	List<FlightDto> searcFlight(SearchFilterDto searchFilterDto);
+
+	List<FlightBookingDto> getMyFlights(long userId);
 
 }

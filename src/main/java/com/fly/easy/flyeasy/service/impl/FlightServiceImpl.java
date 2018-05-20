@@ -9,14 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fly.easy.flyeasy.api.common.ApiException;
+import com.fly.easy.flyeasy.api.dto.FlightBookingDto;
 import com.fly.easy.flyeasy.api.dto.FlightDto;
 import com.fly.easy.flyeasy.api.dto.SearchFilterDto;
 import com.fly.easy.flyeasy.api.dto.TravelClassDto;
 import com.fly.easy.flyeasy.db.model.Airline;
 import com.fly.easy.flyeasy.db.model.Flight;
+import com.fly.easy.flyeasy.db.model.FlightBook;
 import com.fly.easy.flyeasy.db.model.TravelClass;
+import com.fly.easy.flyeasy.db.model.User;
 import com.fly.easy.flyeasy.db.repository.AirlineRepository;
+import com.fly.easy.flyeasy.db.repository.FlightBookRepository;
 import com.fly.easy.flyeasy.db.repository.FlightRepository;
+import com.fly.easy.flyeasy.db.repository.UserRepository;
 import com.fly.easy.flyeasy.service.interfaces.FlightService;
 import com.fly.easy.flyeasy.service.interfaces.LocationService;
 import com.fly.easy.flyeasy.util.SearchUtil;
@@ -32,6 +37,12 @@ public class FlightServiceImpl implements FlightService {
 
 	@Autowired
 	private LocationService locationService;
+
+	@Autowired
+	private UserRepository userRepository;
+
+	@Autowired
+	private FlightBookRepository flightBookRepository;
 
 	@Override
 	public FlightDto createFllight(FlightDto flightDto, long airlineId) {
@@ -161,6 +172,20 @@ public class FlightServiceImpl implements FlightService {
 		}
 		return flightRepository.findAllFlights().stream().map(flight -> FlightDto.of(flight))
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<FlightBookingDto> getMyFlights(long userId) {
+
+		User user = userRepository.findOne(userId);
+
+		if (user == null) {
+			throw new ApiException("User not found");
+		}
+
+		List<FlightBook> myFlights = flightBookRepository.getMyFlights(userId);
+
+		return myFlights.stream().map(fb -> FlightBookingDto.of(fb)).collect(Collectors.toList());
 	}
 
 }

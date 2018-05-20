@@ -66,10 +66,10 @@ public class UserController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/updatePersonalInformation")
-	public ResponseEntity<UpdateUserInformationDto> updatePersonalInformation(@RequestBody UpdateUserInformationDto dto,
+	public ResponseEntity<UserDto> updatePersonalInformation(@RequestBody UpdateUserInformationDto dto,
 			SecurityContextHolder contex) {
 
-		UpdateUserInformationDto updateUserInformationDto = userService.updateUserInformation(dto,
+		UserDto updateUserInformationDto = userService.updateUserInformation(dto,
 				UserUtil.gerUserFromContext().getId());
 
 		return new ResponseEntity<>(updateUserInformationDto, HttpStatus.OK);
@@ -77,9 +77,15 @@ public class UserController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/{id}")
-	public ResponseEntity<UserDto> getUser(@PathVariable("id") long userId) {
+	public ResponseEntity<UserDto> getUser(@PathVariable("id") long userId,SecurityContextHolder contex) {
 
 		return new ResponseEntity<>(userService.findUser(userId), HttpStatus.OK);
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/getUser")
+	public ResponseEntity<UserDto> getUser(SecurityContextHolder contex) {
+
+		return new ResponseEntity<>(userService.findUser(UserUtil.gerUserFromContext().getId()), HttpStatus.OK);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/accessTokenGD")
