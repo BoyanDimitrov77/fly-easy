@@ -22,10 +22,10 @@ import lombok.Data;
 @Builder
 public class VerificationToken {
 
-    @Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "verification_token_id_seq")
-	@SequenceGenerator(name = "verification_token_id_seq", sequenceName = "verification_token_id_seq", allocationSize = 1)
-    private Long id;
+	@Id
+	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long id;
 
     @Column(name = "token")
     private String token;

@@ -24,8 +24,7 @@ public class CommentsUserAirline {
 
 	@Id
 	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "comments_user_airline_id_seq")
-	@SequenceGenerator(name = "comments_user_airline_id_seq", sequenceName = "comments_user_airline_id_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
 	@ManyToOne(fetch = FetchType.EAGER)

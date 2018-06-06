@@ -25,8 +25,7 @@ public class Bonus {
 	
 	@Id
 	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bonus_id_seq")
-	@SequenceGenerator(name = "bonus_id_seq", sequenceName = "bonus_id_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	
 	@ManyToOne(fetch = FetchType.EAGER)

@@ -22,8 +22,7 @@ public class HotelRoom {
 
 	@Id
 	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hotel_room_id_seq")
-	@SequenceGenerator(name = "hotel_room_id_seq", sequenceName = "hotel_room_id_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
 	@ManyToOne(fetch = FetchType.EAGER)

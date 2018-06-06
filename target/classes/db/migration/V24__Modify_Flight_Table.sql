@@ -1,3 +1,3 @@
-ALTER TABLE flight
-DROP COLUMN class,
-DROP COLUMN seats;
+ALTER TABLE `flight`
+DROP COLUMN `class`,
+DROP COLUMN `seats`;

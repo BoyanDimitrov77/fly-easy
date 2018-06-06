@@ -19,8 +19,7 @@ public class TravelClass {
 
 	@Id
 	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "travel_class_id_seq")
-	@SequenceGenerator(name = "travel_class_id_seq", sequenceName = "travel_class_id_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
 	@Column(name = "max_seats")

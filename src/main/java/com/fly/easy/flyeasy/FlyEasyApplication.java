@@ -18,7 +18,7 @@ public class FlyEasyApplication {
 
 	@PostConstruct
     public void init(){
-        TimeZone.setDefault(TimeZone.getTimeZone(ZoneId.of("UTC")));   // It will set UTC timezone
+        //TimeZone.setDefault(TimeZone.getTimeZone(ZoneId.of("UTC")));   // It will set UTC timezone
         System.out.println("Spring boot application running in UTC timezone :"+new Date());   // It will print UTC timezone
     }
 
