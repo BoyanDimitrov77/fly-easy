@@ -25,4 +25,6 @@ public interface HotelService {
 	List<PictureDto> uploadHotelPicutures(long hotelId, MultipartFile[] files) throws IOException ;
 
 	List<HotelDto> findAllHotels();
+
+	List<HotelBookingDto> findAllMyBookedHotel(long userId);
 }

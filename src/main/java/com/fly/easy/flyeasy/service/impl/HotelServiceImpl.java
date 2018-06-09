@@ -180,4 +180,10 @@ public class HotelServiceImpl implements HotelService {
 	public List<HotelDto> findAllHotels() {
 		return hotelRepository.findAll().stream().map(hotel->HotelDto.of(hotel)).collect(Collectors.toList());
 	}
+
+	@Override
+	public List<HotelBookingDto> findAllMyBookedHotel(long userId) {
+
+		return HotelBookingDto.of(hotelBookRepository.findAllUserHotelBooked(userId));
+	}
 }
