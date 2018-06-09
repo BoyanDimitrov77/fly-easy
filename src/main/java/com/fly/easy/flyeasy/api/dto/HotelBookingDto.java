@@ -1,5 +1,8 @@
 package com.fly.easy.flyeasy.api.dto;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.fly.easy.flyeasy.db.model.HotelBook;
 import com.fly.easy.flyeasy.util.FlyEasyApp;
 
@@ -25,5 +28,10 @@ public class HotelBookingDto {
 				hb -> HotelBookingDto.builder().id(hb.getId()).hotelRoom(HotelRoomDto.of(hb.getHotelRoom()))
 						.booker(UserDto.of(hb.getUser())).payment(PaymentDto.of(hb.getPayment())).status(hb.getStatus())
 						.build());
+	}
+
+	public static List<HotelBookingDto> of(List<HotelBook> hotelBooks) {
+		return hotelBooks.stream().map(hotelBook -> HotelBookingDto.of(hotelBook)).collect(Collectors.toList());
+
 	}
 }
