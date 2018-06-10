@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fly.easy.flyeasy.api.common.ApiException;
+import com.fly.easy.flyeasy.api.dto.ChangeUserPasswordDto;
 import com.fly.easy.flyeasy.api.dto.PictureDto;
 import com.fly.easy.flyeasy.api.dto.UpdateUserInformationDto;
 import com.fly.easy.flyeasy.api.dto.UserDto;
@@ -218,6 +219,30 @@ public class UserServiceImpl implements UserService{
 			e.printStackTrace();
 		}
 		return accessTokenGD;
+	}
+
+	@Override
+	public String chnageUserPassword(ChangeUserPasswordDto dto, long userId) {
+
+		User user = userRepository.findById(userId);
+
+		if (user == null) {
+			throw new ApiException("User not found");
+		}
+
+		if (dto.getOldPassword() != null && !dto.getOldPassword().isEmpty()) {
+			if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
+				throw new ApiException("Wrong password");
+			}
+
+			if (dto.getNewPassword() != null && !dto.getNewPassword().isEmpty()) {
+				user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+				userRepository.saveAndFlush(user);
+				return "Password change successful";
+			}
+		}
+		return "Something went wrong please try again!";
+
 	}
 
 }
