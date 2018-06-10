@@ -5,6 +5,7 @@ import java.text.ParseException;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fly.easy.flyeasy.api.dto.ChangeUserPasswordDto;
 import com.fly.easy.flyeasy.api.dto.UpdateUserInformationDto;
 import com.fly.easy.flyeasy.api.dto.UserDto;
 import com.fly.easy.flyeasy.db.model.User;
@@ -34,4 +35,6 @@ public interface UserService {
 	UserDto findUser(long userId);
 
 	String getAccessTokenGD();
+
+	String chnageUserPassword(ChangeUserPasswordDto dto, long userId);
 }

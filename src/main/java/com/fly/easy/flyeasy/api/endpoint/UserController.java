@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fly.easy.flyeasy.api.common.ApiException;
 import com.fly.easy.flyeasy.api.dto.BasicDto;
+import com.fly.easy.flyeasy.api.dto.ChangeUserPasswordDto;
 import com.fly.easy.flyeasy.api.dto.PictureDto;
 import com.fly.easy.flyeasy.api.dto.UpdateUserInformationDto;
 import com.fly.easy.flyeasy.api.dto.UserDto;
@@ -92,6 +93,15 @@ public class UserController {
 	public ResponseEntity<BasicDto<String>> getAccessTokenGD() {
 
 		return new ResponseEntity<>(new BasicDto<>(userService.getAccessTokenGD()), HttpStatus.OK);
+	}
+
+	@RequestMapping(method = RequestMethod.PUT, value = "/changePassword")
+	public ResponseEntity<BasicDto<String>> changePassword(@RequestBody ChangeUserPasswordDto changeUserPasswordDto,
+			SecurityContextHolder contex) {
+
+		String response = userService.chnageUserPassword(changeUserPasswordDto, UserUtil.gerUserFromContext().getId());
+
+		return new ResponseEntity<>(new BasicDto<>(response), HttpStatus.OK);
 	}
 
 }
