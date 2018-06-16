@@ -78,10 +78,11 @@ public class UserServiceImpl implements UserService{
 	@Override
 	@Transactional
     public UserDto register(UserDto userDto) throws ParseException,CannotSendEmailException {
-
-        /*if (!userDtoValidator.isValid(userDto)) {
+		/*
+        if (!userDtoValidator.isValid(userDto)) {
             throw new ApiException("User with email already exists");
         }
+
 	    if (userDto.getToken() != null) { // Sign up with facebook
 	        return processFacebookSignup(userDto);
 	    } else {
@@ -104,7 +105,7 @@ public class UserServiceImpl implements UserService{
 		savedUser = addRole(savedUser, UserRoleEnum.USER);
 		
 		VerificationToken token = verificationTokenService.generateTokenForUser(savedUser);
-		String url = verificationTokenService.urlFromToken(token);
+		String url = verificationTokenService.urlFromToken(token.getToken(),"login");
 
 		mailService.sendEmailConfirmation(savedUser.getEmail(), url);
 
@@ -154,7 +155,7 @@ public class UserServiceImpl implements UserService{
 		}
 
 		VerificationToken newToken = verificationTokenService.generateTokenForUser(user);
-		String url = verificationTokenService.urlFromToken(newToken);
+		String url = verificationTokenService.urlFromToken(newToken.getToken(),"resetPassword");
 
 		mailService.sendEmailResetPassord(user.getEmail(), url);
 
