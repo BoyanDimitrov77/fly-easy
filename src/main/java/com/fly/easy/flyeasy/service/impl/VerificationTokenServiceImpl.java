@@ -40,7 +40,8 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     @Value("${server.contextPath}")
     private String restUrl;
 
-    //private final static String mailUrl = "https://flyeasy.app.link?action=";
+    private final static String mailUrl = "https://flyeasy.app.link/";
+
 
     @Override
     public VerificationToken generateTokenForUser(User user) {
@@ -88,16 +89,16 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     }
 
 
-    /*@Override
+    @Override
     public String urlFromToken(String token, String type){
 
         StringBuilder builder = new StringBuilder();
         builder.append(mailUrl);
         builder.append(type);
-        builder.append("&token=");
+        builder.append("?token=");
         builder.append(token);
         return builder.toString();
-    }*/
+    }
 
 
     @Override
