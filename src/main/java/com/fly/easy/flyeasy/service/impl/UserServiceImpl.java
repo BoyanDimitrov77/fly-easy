@@ -77,20 +77,18 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	@Transactional
-    public UserDto register(UserDto userDto) throws ParseException,CannotSendEmailException {
+	public UserDto register(UserDto userDto) throws ParseException, CannotSendEmailException {
 
-        /*if (!userDtoValidator.isValid(userDto)) {
-            throw new ApiException("User with email already exists");
-        }
-	    if (userDto.getToken() != null) { // Sign up with facebook
-	        return processFacebookSignup(userDto);
-	    } else {
-	        return processRegularRegistration(userDto);
-	    }*/
-		
+		if (checkIfEmailExist(userDto.getEmail())) {
+			throw new ApiException("User with email already exists");
+		}
+		if (checkIfUsernameExist(userDto.getUserName())) {
+			throw new ApiException("User with userName already exists");
+		}
+
 		return processRegularRegistration(userDto);
 	}
-	
+
 	private UserDto processRegularRegistration(UserDto userDto) throws CannotSendEmailException {
 		User savedUser;
 		
@@ -243,6 +241,29 @@ public class UserServiceImpl implements UserService{
 		}
 		return "Something went wrong please try again!";
 
+	}
+
+	@Override
+	public boolean checkIfEmailExist(String email) {
+
+		User user = userRepository.findByEmail(email);
+
+		if (user != null) {
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean checkIfUsernameExist(String userName) {
+
+		User user = userRepository.findByUserName(userName);
+
+		if (user != null) {
+			return true;
+		}
+		return false;
 	}
 
 }

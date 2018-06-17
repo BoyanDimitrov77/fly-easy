@@ -37,4 +37,8 @@ public interface UserService {
 	String getAccessTokenGD();
 
 	String chnageUserPassword(ChangeUserPasswordDto dto, long userId);
+
+	boolean checkIfEmailExist(String email);
+
+	boolean checkIfUsernameExist(String username);
 }
