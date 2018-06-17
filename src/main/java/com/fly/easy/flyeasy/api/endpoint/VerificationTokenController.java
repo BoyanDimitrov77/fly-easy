@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fly.easy.flyeasy.api.common.ApiException;
+import com.fly.easy.flyeasy.api.dto.BasicDto;
 import com.fly.easy.flyeasy.api.dto.UserDto;
 import com.fly.easy.flyeasy.service.interfaces.VerificationTokenService;
 
@@ -34,14 +35,14 @@ public class VerificationTokenController {
 
 
     @RequestMapping(path = "/{token}", method = RequestMethod.POST)
-    public ResponseEntity<String> verifyTokenForResetPassword(@PathVariable("token") String token, 
+    public ResponseEntity<BasicDto<String>> verifyTokenForResetPassword(@PathVariable("token") String token, 
             @RequestBody UserDto userDto) {
         try {
             verificationTokenService.resetUserPassword(token, userDto.getPassword());
         } catch (ApiException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new BasicDto<String>(e.getMessage()), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(new BasicDto<String>("Password changed successfully!"),HttpStatus.OK);
     }
  
 }
