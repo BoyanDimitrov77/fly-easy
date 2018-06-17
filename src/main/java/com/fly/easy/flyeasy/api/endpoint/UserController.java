@@ -39,7 +39,7 @@ public class UserController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/resetPassword")
-	public ResponseEntity<String> RequestMethod(@RequestBody UserDto user) {
+	public ResponseEntity<BasicDto<String>> RequestMethod(@RequestBody UserDto user) {
 
 		try {
 			userService.resetPasswrodRequest(user.getEmail());
@@ -47,7 +47,7 @@ public class UserController {
 
 			throw new ApiException(e);
 		}
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>(new BasicDto<String>("Send verification token"),HttpStatus.OK);
 
 	}
 
