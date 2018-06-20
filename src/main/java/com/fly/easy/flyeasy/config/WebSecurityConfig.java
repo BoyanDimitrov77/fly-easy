@@ -57,7 +57,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .invalidateHttpSession(true)
                     .and()
                 .csrf().disable();
-        //TODO: Clear what is not needed like formLogin etc.
     }
 
     @Autowired

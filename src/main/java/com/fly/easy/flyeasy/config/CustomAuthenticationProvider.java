@@ -28,12 +28,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Value("${validation.token.expire}")
     private int minutes;
 
-    
     private UserService userService;
-    
-//    @Autowired
-//    private FacebookService facebookService;
-
     
     private UserRoleService userRoleService;
     
@@ -55,31 +50,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         
         if(StringUtils.isEmpty(username) && StringUtils.isEmpty(password)){
-        	//throw new ApiException("Authorization Exception: Empty username and password.");
-        }
-        if (StringUtils.isEmpty(username)) { //facebook token auth
-            /*org.springframework.social.facebook.api.User userProfile;
-        	System.out.println("FACEBOOK: authenticate: with token: " + password);
-            Facebook facebook = new FacebookTemplate(password);
-            try {
-            	System.out.println("FACEBOOK: fetching fields");
-            	String [] FB_FIELDS = facebookService.getUserFieldsMeta();
-                userProfile = facebook.fetchObject("me", org.springframework.social.facebook.api.User.class, FB_FIELDS);
-            } catch (Exception iae) {
-            	System.out.println("FACEBOOK: invalid token");
-                throw new ApiException("Invalid facebook connection with token: " + password);
-            }
-
-            String facebookId = userProfile.getId();
-            user = userService.getUserByFacebookId(facebookId);
-            if(user == null || user.isBanned()) {
-            	System.out.println("FACEBOOK: username with facebookID not found-exception");
-                throw new BadCredentialsException("Username not found.");
-            }*/
-		} else { // regular authentication
+			throw new ApiException("Authorization Exception: Empty username and password.");
+        }else { // regular authentication
 			user = userService.findByEmail(username);
 			if (user == null) {
-				//System.out.println("FACEBOOK: cant find user by email");
 				throw new BadCredentialsException("Username not found.");
 			}
 
@@ -93,8 +67,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         }
         
         user.setPassword("");
-        //userService.updateLastLoginDate(user.getId());
-        //UserUtil.setUserLanguage(user.getLanguage());
 
         return new UsernamePasswordAuthenticationToken(user, password, getAuthorities(user));
     }

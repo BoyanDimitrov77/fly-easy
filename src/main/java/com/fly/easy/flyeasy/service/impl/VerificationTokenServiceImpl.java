@@ -105,10 +105,10 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     public void resetUserPassword(String token, String password) {
         VerificationToken dbToken = findByToken(token);
         if (dbToken == null) {
-            //throw new ApiException("Invalid token");
+            throw new ApiException("Invalid token");
         }
         if (dbToken.getExpiryDate().before(new Date())) {
-            //throw new ApiException("The token has expired");
+            throw new ApiException("The token has expired");
         }
 
         User dbUser = dbToken.getUser();
