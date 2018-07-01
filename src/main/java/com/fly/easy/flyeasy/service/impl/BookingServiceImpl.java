@@ -75,14 +75,21 @@ public class BookingServiceImpl implements BookingService {
 	}
 
 	@Override
-	public FlightBookingDto payBookedFlight(BigDecimal amount, long flightBookId, String bonusId) {
+	public FlightBookingDto payBookedFlight(BigDecimal amount, long flightBookId, String bonusId, long travelClassId) {
 		FlightBook flightBook = flightBookRepository.findOne(flightBookId);
 
 		if(flightBook == null){
 			throw new ApiException("Flight book not found");
 		}
+		TravelClass travelClass = travelClassRepository.findOne(travelClassId);
 
-		FlightBook flightB = paymentService.payBookedFlight(flightBook, amount, bonusId);
+		if(travelClass == null){
+			throw new ApiException("Travel class not found");
+		}
+
+		FlightBook flightB = paymentService.payBookedFlight(flightBook, amount, bonusId, travelClass);
+
+		flightB.setStatus(BookStatus.CONFIRMED.toString());
 
 		FlightBook saveBookFlight = flightBookRepository.saveAndFlush(flightB);
 

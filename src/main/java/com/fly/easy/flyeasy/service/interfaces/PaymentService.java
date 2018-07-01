@@ -5,13 +5,14 @@ import java.math.BigDecimal;
 import com.fly.easy.flyeasy.db.model.FlightBook;
 import com.fly.easy.flyeasy.db.model.HotelBook;
 import com.fly.easy.flyeasy.db.model.Payment;
+import com.fly.easy.flyeasy.db.model.TravelClass;
 import com.fly.easy.flyeasy.db.model.User;
 
 public interface PaymentService {
 
 	Payment createPaymentRecord(User user);
 	
-	FlightBook payBookedFlight(FlightBook flightBook,BigDecimal amount,String bonusId);
+	FlightBook payBookedFlight(FlightBook flightBook,BigDecimal amount,String bonusId, TravelClass travelClass);
 	
 	HotelBook payHotelBook(HotelBook hotelBook,BigDecimal amount);
 	

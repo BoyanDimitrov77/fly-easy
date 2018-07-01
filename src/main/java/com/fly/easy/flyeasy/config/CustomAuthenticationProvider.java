@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import com.fly.easy.flyeasy.api.common.ApiException;
 import com.fly.easy.flyeasy.api.dto.UserDto;
 import com.fly.easy.flyeasy.service.interfaces.UserRoleService;
 import com.fly.easy.flyeasy.service.interfaces.UserService;
@@ -78,7 +79,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		} else { // regular authentication
 			user = userService.findByEmail(username);
 			if (user == null) {
-		    	System.out.println("FACEBOOK: cant find user by email");
+				//System.out.println("FACEBOOK: cant find user by email");
 				throw new BadCredentialsException("Username not found.");
 			}
 
@@ -87,8 +88,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             }
 
             if (!user.isEnabled() && ZonedDateTime.now().isAfter(ZonedDateTime.ofInstant(user.getTimestamp().toInstant(), ZoneId.systemDefault()).plusMinutes(minutes))) {
-				//throw new UnconfirmedEmailException("Account demo version has expired. Please verify your account.");
-            }
+				throw new ApiException("Account demo version has expired. Please verify your account.");
+			}
         }
         
         user.setPassword("");

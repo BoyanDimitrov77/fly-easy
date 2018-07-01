@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fly.easy.flyeasy.api.common.ApiException;
+import com.fly.easy.flyeasy.api.dto.ChangeUserPasswordDto;
 import com.fly.easy.flyeasy.api.dto.PictureDto;
 import com.fly.easy.flyeasy.api.dto.UpdateUserInformationDto;
 import com.fly.easy.flyeasy.api.dto.UserDto;
@@ -24,6 +25,7 @@ import com.fly.easy.flyeasy.db.model.UserRolePk;
 import com.fly.easy.flyeasy.db.model.VerificationToken;
 import com.fly.easy.flyeasy.db.repository.UserRepository;
 import com.fly.easy.flyeasy.db.repository.UserRoleRepository;
+import com.fly.easy.flyeasy.service.interfaces.GoogleDriveService;
 import com.fly.easy.flyeasy.service.interfaces.LocationService;
 import com.fly.easy.flyeasy.service.interfaces.MailService;
 import com.fly.easy.flyeasy.service.interfaces.PictureService;
@@ -60,6 +62,9 @@ public class UserServiceImpl implements UserService{
 	@Autowired
 	private LocationService locationService;
 
+	@Autowired
+	private GoogleDriveService googleDriveService;
+
 	public PasswordEncoder getPasswordEncoder(){
 		return this.passwordEncoder;
 	}
@@ -72,20 +77,18 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	@Transactional
-    public UserDto register(UserDto userDto) throws ParseException,CannotSendEmailException {
+	public UserDto register(UserDto userDto) throws ParseException, CannotSendEmailException {
 
-        /*if (!userDtoValidator.isValid(userDto)) {
-            throw new ApiException("User with email already exists");
-        }
-	    if (userDto.getToken() != null) { // Sign up with facebook
-	        return processFacebookSignup(userDto);
-	    } else {
-	        return processRegularRegistration(userDto);
-	    }*/
-		
+		if (checkIfEmailExist(userDto.getEmail())) {
+			throw new ApiException("User with email already exists");
+		}
+		if (checkIfUsernameExist(userDto.getUserName())) {
+			throw new ApiException("User with userName already exists");
+		}
+
 		return processRegularRegistration(userDto);
 	}
-	
+
 	private UserDto processRegularRegistration(UserDto userDto) throws CannotSendEmailException {
 		User savedUser;
 		
@@ -99,7 +102,7 @@ public class UserServiceImpl implements UserService{
 		savedUser = addRole(savedUser, UserRoleEnum.USER);
 		
 		VerificationToken token = verificationTokenService.generateTokenForUser(savedUser);
-		String url = verificationTokenService.urlFromToken(token);
+		String url = verificationTokenService.urlFromToken(token.getToken(),"login");
 
 		mailService.sendEmailConfirmation(savedUser.getEmail(), url);
 
@@ -149,7 +152,7 @@ public class UserServiceImpl implements UserService{
 		}
 
 		VerificationToken newToken = verificationTokenService.generateTokenForUser(user);
-		String url = verificationTokenService.urlFromToken(newToken);
+		String url = verificationTokenService.urlFromToken(newToken.getToken(),"resetPassword");
 
 		mailService.sendEmailResetPassord(user.getEmail(), url);
 
@@ -175,7 +178,7 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public UpdateUserInformationDto updateUserInformation(UpdateUserInformationDto dto, long userId) {
+	public UserDto updateUserInformation(UpdateUserInformationDto dto, long userId) {
 
 		User user = userRepository.findOne(userId);
 
@@ -197,7 +200,70 @@ public class UserServiceImpl implements UserService{
 
 		User saveUser = userRepository.saveAndFlush(user);
 
-		return UpdateUserInformationDto.of(saveUser);
+		return UserDto.of(saveUser);
+	}
+
+	@Override
+	public UserDto findUser(long userId) {
+		return UserDto.of(userRepository.findById(userId));
+	}
+
+	@Override
+	public String getAccessTokenGD() {
+		String accessTokenGD = null;
+		try {
+			accessTokenGD = googleDriveService.getAccessTokenGD();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return accessTokenGD;
+	}
+
+	@Override
+	public String chnageUserPassword(ChangeUserPasswordDto dto, long userId) {
+
+		User user = userRepository.findById(userId);
+
+		if (user == null) {
+			throw new ApiException("User not found");
+		}
+
+		if (dto.getOldPassword() != null && !dto.getOldPassword().isEmpty()) {
+			if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
+				throw new ApiException("Wrong password");
+			}
+
+			if (dto.getNewPassword() != null && !dto.getNewPassword().isEmpty()) {
+				user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+				userRepository.saveAndFlush(user);
+				return "Password change successful";
+			}
+		}
+		return "Something went wrong please try again!";
+
+	}
+
+	@Override
+	public boolean checkIfEmailExist(String email) {
+
+		User user = userRepository.findByEmail(email);
+
+		if (user != null) {
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean checkIfUsernameExist(String userName) {
+
+		User user = userRepository.findByUserName(userName);
+
+		if (user != null) {
+			return true;
+		}
+		return false;
 	}
 
 }

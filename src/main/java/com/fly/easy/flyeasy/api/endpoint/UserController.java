@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fly.easy.flyeasy.api.common.ApiException;
+import com.fly.easy.flyeasy.api.dto.BasicDto;
+import com.fly.easy.flyeasy.api.dto.ChangeUserPasswordDto;
 import com.fly.easy.flyeasy.api.dto.PictureDto;
 import com.fly.easy.flyeasy.api.dto.UpdateUserInformationDto;
 import com.fly.easy.flyeasy.api.dto.UserDto;
@@ -36,7 +39,7 @@ public class UserController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/resetPassword")
-	public ResponseEntity<String> RequestMethod(@RequestBody UserDto user) {
+	public ResponseEntity<BasicDto<String>> RequestMethod(@RequestBody UserDto user) {
 
 		try {
 			userService.resetPasswrodRequest(user.getEmail());
@@ -44,7 +47,7 @@ public class UserController {
 
 			throw new ApiException(e);
 		}
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>(new BasicDto<String>("Send verification token"),HttpStatus.OK);
 
 	}
 
@@ -64,14 +67,41 @@ public class UserController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/updatePersonalInformation")
-	public ResponseEntity<UpdateUserInformationDto> updatePersonalInformation(@RequestBody UpdateUserInformationDto dto,
+	public ResponseEntity<UserDto> updatePersonalInformation(@RequestBody UpdateUserInformationDto dto,
 			SecurityContextHolder contex) {
 
-		UpdateUserInformationDto updateUserInformationDto = userService.updateUserInformation(dto,
+		UserDto updateUserInformationDto = userService.updateUserInformation(dto,
 				UserUtil.gerUserFromContext().getId());
 
 		return new ResponseEntity<>(updateUserInformationDto, HttpStatus.OK);
 
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/{id}")
+	public ResponseEntity<UserDto> getUser(@PathVariable("id") long userId,SecurityContextHolder contex) {
+
+		return new ResponseEntity<>(userService.findUser(userId), HttpStatus.OK);
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/getUser")
+	public ResponseEntity<UserDto> getUser(SecurityContextHolder contex) {
+
+		return new ResponseEntity<>(userService.findUser(UserUtil.gerUserFromContext().getId()), HttpStatus.OK);
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/accessTokenGD")
+	public ResponseEntity<BasicDto<String>> getAccessTokenGD() {
+
+		return new ResponseEntity<>(new BasicDto<>(userService.getAccessTokenGD()), HttpStatus.OK);
+	}
+
+	@RequestMapping(method = RequestMethod.PUT, value = "/changePassword")
+	public ResponseEntity<BasicDto<String>> changePassword(@RequestBody ChangeUserPasswordDto changeUserPasswordDto,
+			SecurityContextHolder contex) {
+
+		String response = userService.chnageUserPassword(changeUserPasswordDto, UserUtil.gerUserFromContext().getId());
+
+		return new ResponseEntity<>(new BasicDto<>(response), HttpStatus.OK);
 	}
 
 }

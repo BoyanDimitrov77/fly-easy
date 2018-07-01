@@ -12,6 +12,6 @@ public interface BookingService {
 
 	FlightBookingDto addPassengerFlightBook(long flightBookId , long travelClassId,List<PassengerTicketDto> passengerTicketDtos);
 
-	FlightBookingDto payBookedFlight(BigDecimal amount, long flightBookId, String bonusId);
+	FlightBookingDto payBookedFlight(BigDecimal amount, long flightBookId, String bonusId, long travelClassId);
 
 }

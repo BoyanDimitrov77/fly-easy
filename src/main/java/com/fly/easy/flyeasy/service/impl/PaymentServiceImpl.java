@@ -13,6 +13,7 @@ import com.fly.easy.flyeasy.db.model.FlightBook;
 import com.fly.easy.flyeasy.db.model.HotelBook;
 import com.fly.easy.flyeasy.db.model.Payment;
 import com.fly.easy.flyeasy.db.model.PaymentStatus;
+import com.fly.easy.flyeasy.db.model.TravelClass;
 import com.fly.easy.flyeasy.db.model.User;
 import com.fly.easy.flyeasy.db.repository.PaymentRepository;
 import com.fly.easy.flyeasy.db.repository.UserRepository;
@@ -83,11 +84,11 @@ public class PaymentServiceImpl implements PaymentService{
 	}
 
 	@Override
-	public FlightBook payBookedFlight(FlightBook flightBook, BigDecimal amount, String bonusId) {
+	public FlightBook payBookedFlight(FlightBook flightBook, BigDecimal amount, String bonusId, TravelClass travelClass) {
 		
 		Payment payment = flightBook.getPayment();
 		
-		BigDecimal totalAmountWithoutDiscount = flightBook.getFlight().getPrice()
+		BigDecimal totalAmountWithoutDiscount = travelClass.getPrice()
 				.multiply(new BigDecimal(flightBook.getPassengerTickets().size()));
 
 		BigDecimal saveAmount = amount;
@@ -124,8 +125,6 @@ public class PaymentServiceImpl implements PaymentService{
 
 		payment.setStatus(PaymentStatus.CONFIRMED.toString());
 		paymentRepository.saveAndFlush(payment);
-		
-		flightBook.setStatus(BookStatus.CONFIRMED.toString());
 		
 		
 		return flightBook;

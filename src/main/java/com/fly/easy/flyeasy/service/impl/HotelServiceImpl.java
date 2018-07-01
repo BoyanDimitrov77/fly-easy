@@ -175,4 +175,15 @@ public class HotelServiceImpl implements HotelService {
 
 		return saveHotel;
 	}
+
+	@Override
+	public List<HotelDto> findAllHotels() {
+		return hotelRepository.findAll().stream().map(hotel->HotelDto.of(hotel)).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<HotelBookingDto> findAllMyBookedHotel(long userId) {
+
+		return HotelBookingDto.of(hotelBookRepository.findAllUserHotelBooked(userId));
+	}
 }

@@ -9,6 +9,7 @@ import javax.jdo.annotations.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,9 +18,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fly.easy.flyeasy.api.dto.HotelBookingDto;
 import com.fly.easy.flyeasy.api.dto.HotelDto;
 import com.fly.easy.flyeasy.api.dto.PictureDto;
 import com.fly.easy.flyeasy.service.interfaces.HotelService;
+import com.fly.easy.flyeasy.util.UserUtil;
 
 @RestController
 @RequestMapping(value = "hotel", produces = "application/json")
@@ -63,6 +66,22 @@ public class HotelController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		return new ResponseEntity<>(dtos, HttpStatus.OK);
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/all")
+	public ResponseEntity<List<HotelDto>> findAllHotel() {
+
+		List<HotelDto> dtos = hotelService.findAllHotels();
+
+		return new ResponseEntity<>(dtos, HttpStatus.OK);
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/allMyBookedHotels")
+	public ResponseEntity<List<HotelBookingDto>> findAllMyBookedHotels(SecurityContextHolder contex) {
+
+		List<HotelBookingDto> dtos = hotelService.findAllMyBookedHotel(UserUtil.gerUserFromContext().getId());
 
 		return new ResponseEntity<>(dtos, HttpStatus.OK);
 	}
